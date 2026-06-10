@@ -45,18 +45,45 @@ const PETALS = {
   Z_INDEX: 1,                               // behind content (main is z-index:2)
 };
 
-// ---- Next-Sunday countdown (#3) ----------------------------
+// ---- Next-Sunday countdown / library date stamp (#3) -------
 const COUNTDOWN = {
   IST_OFFSET_MIN: 5 * 60 + 30,  // IST is UTC+5:30
   GATHER_HOUR: 8,               // Sunday gathering starts 08:00 IST
-  ROLL_HOUR: 10,                // "Today" holds until 10:00 IST, then rolls forward
+  ROLL_HOUR: 10,                // "happening now" holds until 10:00 IST, then rolls forward
   TICK_MS: 1000,                // recompute every second
+  // — library date-stamp styling —
+  STAMP_W: 220,                 // px — watercolour wash width
+  STAMP_H: 120,                 // px — watercolour wash height
+  ROTATION: 0.5,                // deg clockwise — the stamp sits very slightly askew
+  WASH_OPACITY: 0.10,           // cream paper reads through the gulmohar wash
+  WASH_BASE_FREQ: 0.02,         // feTurbulence baseFrequency for organic edges
+  WASH_DISPLACE: 8,             // feDisplacementMap scale
+  WASH_COLOR: '#c8553d',        // gulmohar
+  PETAL_SIZE: 12,               // px — printer's-flourish petal by the date line
 };
 
 // ---- Smooth scroll (#4, Lenis) -----------------------------
 const LENIS = {
   DURATION: 1.2,                          // seconds — page-turn weight, not iPhone flick
   EASING: (t) => 1 - Math.pow(1 - t, 3),  // easeOutCubic — slower, weighted settle
+};
+
+// ---- Site-wide atmosphere ----------------------------------
+const ATMOSPHERE = {
+  GRAIN_OPACITY:     0.03,   // 3% paper grain, sits below content
+  GRAIN_BASE_FREQ:   0.85,   // feTurbulence baseFrequency
+  SELECTION:         'rgba(200, 85, 61, 0.22)',  // faded gulmohar text selection
+  SCROLLBAR_W:       6,      // px
+  SCROLLBAR_RGB:     '31, 22, 17',  // --ink
+  SCROLLBAR_ACTIVE:  0.4,    // thumb alpha when active
+  SCROLLBAR_IDLE:    0.1,    // thumb alpha after idle
+  SCROLLBAR_IDLE_MS: 1000,   // idle delay before fading
+  SCROLLBAR_FADE_MS: 400,    // fade transition
+  BLEED_SIZE:        24,     // px — click-bleed diameter
+  BLEED_DURATION:    600,    // ms
+  BLEED_SCALE_FROM:  0.3,
+  BLEED_SCALE_TO:    1.6,
+  BLEED_OPACITY:     0.4,    // peak opacity
 };
 
 // ------------------------------------------------------------
@@ -268,27 +295,100 @@ const LENIS = {
 
 
 /* ============================================================
-   #3 NEXT-SUNDAY COUNTDOWN — a quiet line under the hero.
-   Next Sunday 08:00 IST. On Sunday before 10:00 IST shows
-   "today"; after that it rolls to the following Sunday.
+   #3 NEXT GATHERING — a "library date stamp" under the hero.
+   Three lines (eyebrow · date · countdown) on a soft gulmohar
+   watercolour wash, very slightly askew. Next Sunday 08:00 IST;
+   on Sunday before 10:00 IST it reads "happening now".
+   IST math is unchanged from the original.
    ============================================================ */
 (function () {
-  const OFFSET_MS = COUNTDOWN.IST_OFFSET_MIN * 60 * 1000;
+  const C = COUNTDOWN;
+  const OFFSET_MS = C.IST_OFFSET_MIN * 60 * 1000;
+
+  // Date line uses en-GB ("Sunday, 15 June"). timeZone:UTC because our
+  // `target` carries the IST wall-clock in its UTC fields (see below).
+  const dateFmt = new Intl.DateTimeFormat('en-GB', {
+    weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC'
+  });
+
+  function injectCSS() {
+    const css = `
+      #next-sunday {
+        position: relative; z-index: 2;
+        width: max-content; max-width: 90vw;
+        margin: 4rem auto; padding-block: 3rem;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; transform: rotate(${C.ROTATION}deg);
+      }
+      #next-sunday .ds-wash {
+        position: absolute; top: 50%; left: 50%;
+        width: ${C.STAMP_W}px; height: ${C.STAMP_H}px;
+        transform: translate(-50%, -50%);
+        opacity: ${C.WASH_OPACITY}; overflow: visible; pointer-events: none; z-index: 0;
+      }
+      #next-sunday .ds-inner { position: relative; z-index: 1; }
+      #next-sunday .ds-eyebrow {
+        font-family: 'Lora', serif; font-variant: small-caps;
+        letter-spacing: 0.15em; font-size: 0.7rem;
+        color: rgba(31, 22, 17, 0.6);
+      }
+      #next-sunday .ds-date {
+        position: relative;
+        font-family: 'Fraunces', serif; font-style: italic;
+        font-variation-settings: "SOFT" 100, "opsz" 28;
+        font-size: 1.5rem; color: var(--ink);
+        margin: 0.4rem 0 0.45rem;
+      }
+      #next-sunday .ds-petal {
+        position: absolute; width: ${C.PETAL_SIZE}px; height: ${C.PETAL_SIZE * 1.4}px;
+        left: -16px; top: -9px; transform: rotate(-18deg);
+      }
+      #next-sunday .ds-count {
+        font-family: 'Lora', serif; font-style: italic;
+        font-size: 0.9rem; color: var(--ink-soft);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #next-sunday { transform: none; }   /* no askew tilt; countdown still ticks */
+      }
+    `;
+    const style = document.createElement('style');
+    style.id = 'pb-countdown';
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
 
   function build() {
     const hero = document.querySelector('.hero');
-    if (!hero) return;
+    if (!hero) return;   // homepage only
+
+    injectCSS();
 
     const el = document.createElement('div');
     el.id = 'next-sunday';
     el.setAttribute('aria-live', 'off');
-    el.style.cssText =
-      'text-align:center;font-family:"Fraunces",serif;' +
-      'font-variation-settings:"SOFT" 100,"opsz" 14;' +
-      'font-size:0.95rem;letter-spacing:0.01em;color:var(--ink);' +
-      'position:relative;z-index:2;margin:-2.5rem auto 0;padding:0 1.5rem 1rem;';
+    el.innerHTML =
+      `<svg class="ds-wash" viewBox="0 0 ${C.STAMP_W} ${C.STAMP_H}" aria-hidden="true">
+         <defs>
+           <filter id="ds-wash-edge" x="-25%" y="-35%" width="150%" height="170%">
+             <feTurbulence type="fractalNoise" baseFrequency="${C.WASH_BASE_FREQ}" numOctaves="2" seed="4" result="n"/>
+             <feDisplacementMap in="SourceGraphic" in2="n" scale="${C.WASH_DISPLACE}"/>
+           </filter>
+         </defs>
+         <ellipse cx="${C.STAMP_W / 2}" cy="${C.STAMP_H / 2}" rx="${C.STAMP_W / 2 - 14}" ry="${C.STAMP_H / 2 - 14}"
+                  fill="${C.WASH_COLOR}" filter="url(#ds-wash-edge)"/>
+       </svg>
+       <div class="ds-inner">
+         <div class="ds-eyebrow">next gathering</div>
+         <div class="ds-date">
+           <svg class="ds-petal" viewBox="0 0 20 28" aria-hidden="true"><path d="M10 0 C16 8 18 19 10 28 C2 19 4 8 10 0 Z" fill="${C.WASH_COLOR}"/></svg>
+           <span class="ds-date-text"></span>
+         </div>
+         <div class="ds-count"></div>
+       </div>`;
     hero.insertAdjacentElement('afterend', el);
 
+    const dateText  = el.querySelector('.ds-date-text');
+    const countText = el.querySelector('.ds-count');
     const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
 
     function tick() {
@@ -298,26 +398,36 @@ const LENIS = {
       const hour = ist.getUTCHours();
 
       let daysUntil = (7 - day) % 7;
+      let happeningNow = false;
       if (daysUntil === 0) {
-        if (hour < COUNTDOWN.ROLL_HOUR) { el.textContent = 'Next Sunday — today'; return; }
-        daysUntil = 7;                       // Sunday past 10:00 → next week
+        if (hour < C.ROLL_HOUR) happeningNow = true;  // Sunday before 10:00
+        else daysUntil = 7;                           // Sunday past 10:00 → next week
       }
 
       const target = new Date(ist);
       target.setUTCDate(target.getUTCDate() + daysUntil);
-      target.setUTCHours(COUNTDOWN.GATHER_HOUR, 0, 0, 0);
+      target.setUTCHours(C.GATHER_HOUR, 0, 0, 0);
+
+      // Build "Sunday, 15 June" from parts — guarantees the comma cross-browser.
+      const p = dateFmt.formatToParts(target);
+      const part = (t) => (p.find((x) => x.type === t) || {}).value || '';
+      dateText.textContent = `${part('weekday')}, ${part('day')} ${part('month')}`;
+
+      if (happeningNow) {
+        countText.textContent = 'happening now, under a tree.';
+        return;
+      }
 
       let diff = Math.max(0, target.getTime() - ist.getTime());
       const days = Math.floor(diff / 86400000); diff -= days * 86400000;
       const hrs  = Math.floor(diff / 3600000);  diff -= hrs * 3600000;
       const mins = Math.floor(diff / 60000);
-
-      el.textContent = 'Next Sunday — ' +
+      countText.textContent =
         plural(days, 'day') + ', ' + plural(hrs, 'hour') + ', ' + plural(mins, 'minute');
     }
 
     tick();
-    setInterval(tick, COUNTDOWN.TICK_MS);
+    setInterval(tick, C.TICK_MS);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
@@ -354,4 +464,123 @@ const LENIS = {
     e.preventDefault();
     lenis.scrollTo(target, { offset: 0 });
   });
+})();
+
+
+/* ============================================================
+   SITE-WIDE ATMOSPHERE — loads on every page that includes this file.
+     3a paper grain  ·  3b faded selection  ·  3c ink-thin scrollbar
+     ·  3d click-bleed watercolour.
+   Only the click-bleed is gated on reduced-motion; the rest are static.
+   ============================================================ */
+(function () {
+  const A = ATMOSPHERE;
+  const reduce = window.matchMedia &&
+                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // --- 3a + 3b + 3c: inject the static CSS (grain, selection, scrollbar) ---
+  const grainSVG =
+    "data:image/svg+xml;utf8," +
+    "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'>" +
+      "<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='" + A.GRAIN_BASE_FREQ +
+        "' numOctaves='2' stitchTiles='stitch'/>" +
+        "<feColorMatrix type='saturate' values='0'/></filter>" +
+      "<rect width='100%' height='100%' filter='url(%23n)'/>" +
+    "</svg>";
+
+  const css = `
+    /* 3a — paper grain: fixed, below content (main is z-index:2) */
+    html::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none;
+      z-index: 1; opacity: ${A.GRAIN_OPACITY}; mix-blend-mode: multiply;
+      background-image: url("${grainSVG}");
+    }
+    /* 3b — faded gulmohar selection */
+    ::selection { background: ${A.SELECTION}; color: inherit; }
+    /* 3c — ink-thin scrollbar */
+    html { scrollbar-width: thin; scrollbar-color: rgba(${A.SCROLLBAR_RGB}, ${A.SCROLLBAR_ACTIVE}) transparent; transition: scrollbar-color ${A.SCROLLBAR_FADE_MS}ms; }
+    html.pb-sb-idle { scrollbar-color: rgba(${A.SCROLLBAR_RGB}, ${A.SCROLLBAR_IDLE}) transparent; }
+    ::-webkit-scrollbar { width: ${A.SCROLLBAR_W}px; height: ${A.SCROLLBAR_W}px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(${A.SCROLLBAR_RGB}, ${A.SCROLLBAR_ACTIVE});
+      border-radius: ${A.SCROLLBAR_W / 2}px;
+      transition: background ${A.SCROLLBAR_FADE_MS}ms;
+    }
+    html.pb-sb-idle::-webkit-scrollbar-thumb { background: rgba(${A.SCROLLBAR_RGB}, ${A.SCROLLBAR_IDLE}); }
+  `;
+  const style = document.createElement('style');
+  style.id = 'pb-atmosphere';
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  // --- 3c behaviour: fade the scrollbar to idle after inactivity ---
+  if (!reduce) {
+    const root = document.documentElement;
+    let idleTimer = 0;
+    const wake = () => {
+      root.classList.remove('pb-sb-idle');
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => root.classList.add('pb-sb-idle'), A.SCROLLBAR_IDLE_MS);
+    };
+    ['scroll', 'wheel', 'touchmove', 'pointermove'].forEach(
+      ev => window.addEventListener(ev, wake, { passive: true })
+    );
+    idleTimer = setTimeout(() => root.classList.add('pb-sb-idle'), A.SCROLLBAR_IDLE_MS);
+  }
+
+  // --- 3d: click-bleed watercolour bloom (skipped under reduced-motion) ---
+  if (!reduce) {
+    document.addEventListener('click', (e) => {
+      const drop = document.createElement('span');
+      drop.setAttribute('aria-hidden', 'true');
+      drop.style.cssText =
+        'position:fixed;pointer-events:none;z-index:99;border-radius:50%;' +
+        'width:' + A.BLEED_SIZE + 'px;height:' + A.BLEED_SIZE + 'px;' +
+        'left:' + (e.clientX - A.BLEED_SIZE / 2) + 'px;' +
+        'top:'  + (e.clientY - A.BLEED_SIZE / 2) + 'px;' +
+        'background:radial-gradient(circle, rgba(200,85,61,' + A.BLEED_OPACITY +
+          ') 0%, rgba(200,85,61,0) 70%);';
+      document.body.appendChild(drop);
+      const anim = drop.animate(
+        [
+          { transform: 'scale(' + A.BLEED_SCALE_FROM + ')', opacity: A.BLEED_OPACITY },
+          { transform: 'scale(' + A.BLEED_SCALE_TO + ')',   opacity: 0 }
+        ],
+        { duration: A.BLEED_DURATION, easing: 'cubic-bezier(0.2, 0.6, 0.2, 1)' }
+      );
+      anim.addEventListener('finish', () => drop.remove());
+    }, { passive: true });
+  }
+})();
+
+
+/* ============================================================
+   NAVBAR — condensed state on scroll + mobile "menu" toggle.
+   Works on every page that includes this file.
+   ============================================================ */
+(function () {
+  const NAV_SCROLL_THRESHOLD = 80;   // px scrolled before the bar condenses
+
+  const header = document.querySelector('header.top');
+  if (!header) return;
+
+  // condense the bar once the page has scrolled past the threshold
+  const onScroll = () => {
+    header.classList.toggle('scrolled', window.scrollY > NAV_SCROLL_THRESHOLD);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // mobile: "menu" text trigger slides the link stack open/closed
+  const toggle = header.querySelector('.nav-toggle');
+  const links  = header.querySelector('.nav-links');
+  if (toggle && links) {
+    const close = () => { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); };
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  }
 })();

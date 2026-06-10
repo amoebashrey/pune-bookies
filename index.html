@@ -21,6 +21,7 @@
   --gulmohar: #c8553d;
   --gulmohar-soft: #d97863;
   --gulmohar-faint: #e8a89a;
+  --gulmohar-deep: #b44c37;   /* ~10% darker than --gulmohar — bookmark hover/active */
   --sage: #738c5a;
   --sage-soft: #9bb07e;
   --terracotta: #b56b3a;
@@ -51,9 +52,9 @@ body {
   position: relative;
 }
 
-/* Paper grain texture overlay (fixed) */
+/* Paper grain texture overlay — DISABLED (superseded by the 3% grain in animations.js / ATMOSPHERE) */
 body::before {
-  content: '';
+  content: none;
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -172,7 +173,8 @@ section {
 }
 
 /* ============================
-   HEADER / NAV
+   HEADER / NAV  (redesign — Aesop / Marginalian / read.cv register:
+   wordmark left, three tiny small-caps links right, no bar.)
    ============================ */
 
 header.top {
@@ -180,47 +182,104 @@ header.top {
   top: 0;
   left: 0;
   right: 0;
-  padding: 1.3rem clamp(1.5rem, 5vw, 3.5rem);
+  padding: 32px 40px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   z-index: 50;
-  mix-blend-mode: multiply;
+  background: transparent;
+  transition: background 300ms ease-out, backdrop-filter 300ms ease-out, padding 300ms ease-out;
 }
 
+/* condensed state once the page has scrolled */
+header.top.scrolled {
+  background: rgba(244, 236, 216, 0.94);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+/* wordmark */
 header.top .mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   font-family: 'Fraunces', serif;
   font-variation-settings: "SOFT" 100, "opsz" 24;
-  font-size: 1.15rem;
-  color: var(--ink);
+  font-size: 19px;
+  line-height: 1;
   border: none;
   padding: 0;
 }
+header.top .mark .mk-pune    { color: var(--ink);      font-style: normal; font-weight: 400; }
+header.top .mark .mk-bookies { color: var(--gulmohar); font-style: italic; }
 
-header.top .mark em {
-  font-style: italic;
-  color: var(--gulmohar);
-}
-
-header.top nav {
-  display: flex;
-  gap: 2rem;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-}
-
-header.top nav a {
-  color: var(--ink-soft);
+/* nav links */
+header.top .nav-links { display: flex; gap: 32px; align-items: baseline; }
+header.top .nav-links a {
+  position: relative;
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: rgba(31, 22, 17, 0.62);
+  text-decoration: none;
   border: none;
+  padding: 0 0 2px;
+  transition: opacity 220ms ease;
+}
+header.top .nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: var(--gulmohar);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms ease;
+}
+header.top .nav-links a:hover { color: rgba(31, 22, 17, 0.62); opacity: 0.95; }
+header.top .nav-links a:hover::after { transform: scaleX(1); }
+
+/* mobile "menu" text trigger — hidden on desktop */
+header.top .nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(31, 22, 17, 0.62);
   padding: 0;
 }
 
-header.top nav a:hover {
-  color: var(--gulmohar);
+@media (max-width: 767px) {
+  header.top { padding: 20px; align-items: center; }
+  header.top .mark { font-size: 17px; }
+  header.top .nav-toggle { display: block; }
+  header.top .nav-links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 18px;
+    background: rgba(244, 236, 216, 0.97);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    max-height: 0;
+    padding: 0 20px;
+    overflow: hidden;
+    transition: max-height 220ms ease, padding 220ms ease;
+  }
+  header.top .nav-links.open { max-height: 240px; padding: 16px 20px 22px; }
 }
-
-@media (max-width: 720px) {
-  header.top nav { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  header.top, header.top .nav-links, header.top .nav-links a,
+  header.top .nav-links a::after { transition: none; }
 }
 
 /* ============================
@@ -987,6 +1046,96 @@ footer {
   .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   .lenis.lenis-stopped { overflow: clip; }
   .lenis.lenis-smooth iframe { pointer-events: none; }
+
+  /* ============================
+     FAQ — reading column (redesign). Question in Fraunces italic,
+     answer in Lora beneath, 2.5rem between pairs, no accordion lines.
+     An ink rule draws under each question as it enters view.
+     ============================ */
+  .faq .faq-list { max-width: 620px; }
+  .faq .faq-item { border: none; padding: 0; margin-bottom: 2.5rem; }
+  .faq .faq-item:last-child { border: none; margin-bottom: 0; }
+  .faq .faq-item h3.faq-q {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: "SOFT" 100, "opsz" 28;
+    font-size: 1.3rem;
+    line-height: 1.3;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .faq .faq-item p {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .faq-rule {
+    display: block;
+    width: 120px;
+    height: 7px;
+    margin-top: 0.55rem;
+    overflow: visible;
+  }
+  .faq-rule path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .faq-item.visible .faq-rule path {
+    animation: faqDraw var(--faq-draw, 400ms) cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+  }
+  @keyframes faqDraw { to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-rule path { stroke-dashoffset: 0 !important; animation: none !important; }
+  }
+
+  /* ============================
+     PARTNER BOOKMARK — gulmohar ribbon folded over the right edge,
+     present on every page. Watercolour edges via SVG turbulence.
+     ============================ */
+  .bookmark {
+    position: fixed;
+    top: -20px;            /* folds ~20px over the top edge of the page */
+    right: 24px;           /* clears the thin scrollbar at the very edge */
+    width: 14px;
+    height: 120px;         /* 20px above the fold + 100px hanging */
+    z-index: 100;
+    display: block;
+    border: none;
+    padding: 0;
+    text-decoration: none;
+    transition: transform 0.45s cubic-bezier(0.2, 0.6, 0.2, 1);
+    filter: drop-shadow(0 4px 8px rgba(31, 22, 17, 0.12));
+  }
+  .bookmark-shape { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+  .bookmark-shape rect { fill: var(--gulmohar); transition: fill 0.45s ease; }
+  .bookmark-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    transform-origin: center;
+    white-space: nowrap;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: "SOFT" 100, "opsz" 12;
+    font-variant: small-caps;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    pointer-events: none;
+  }
+  .bookmark:hover { transform: translateY(20px); }
+  .bookmark:hover .bookmark-shape rect { fill: var(--gulmohar-deep); }
+  /* active state (on /brands itself): deeper red, no hover-slide */
+  .bookmark.is-active .bookmark-shape rect { fill: var(--gulmohar-deep); }
+  .bookmark.is-active:hover { transform: none; }
+
+  @media (max-width: 767px) {
+    /* collapse to a small ribbon tab in the top-right corner */
+    .bookmark { top: 0; right: 0; width: 32px; height: 32px; }
+    .bookmark-text { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bookmark { transition: none; }
+  }
 </style>
 
 <script>
@@ -1021,15 +1170,28 @@ footer {
      HEADER
      ============================ -->
 <header class="top">
-  <a href="#top" class="mark">Pune <em>Bookies</em></a>
-  <nav>
-    <a href="#manifesto">What this is</a>
+  <a href="/" class="mark"><span class="mk-pune">Pune</span><span class="mk-bookies">Bookies</span></a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">menu</button>
+  <nav class="nav-links" id="nav-links">
+    <a href="#manifesto">Manifesto</a>
     <a href="#sundays">Sundays</a>
     <a href="#stories">Stories</a>
-    <a href="#faq">FAQ</a>
-    <a href="#come">Come</a>
   </nav>
 </header>
+
+<!-- Partner bookmark — hangs from the right edge on every page -->
+<a href="/brands.html" class="bookmark" aria-label="Partner with us">
+  <svg class="bookmark-shape" viewBox="0 0 14 120" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <filter id="bookmark-edge" x="-60%" y="-8%" width="220%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06 0.12" numOctaves="2" seed="6" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/>
+      </filter>
+    </defs>
+    <rect x="2" y="0" width="10" height="120" filter="url(#bookmark-edge)"/>
+  </svg>
+  <span class="bookmark-text">Partner with us</span>
+</a>
 
 <main id="top">
 
@@ -1172,7 +1334,7 @@ footer {
         </p>
 
         <p>
-          We started in early 2025 because reading had become hard to protect from everything else. The phone. The laundry. The rest of life. It turned out a lot of people in Pune were having the same problem. We're closer to 250 on a typical Sunday now.
+          We started in early 2024 because reading had become hard to protect from everything else. The phone. The laundry. The rest of life. It turned out a lot of people in Pune were having the same problem. We're closer to 250 on a typical Sunday now.
         </p>
 
         <div class="pull serif-italic">
@@ -1308,12 +1470,12 @@ footer {
 
         <div class="photo-tile t5">
           <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=900&q=80" alt="Person reading">
-          <div class="photo-caption">The morning the geese came · November 2025</div>
+          <div class="photo-caption">The morning the geese came · November 2024</div>
         </div>
 
         <div class="photo-tile t6">
           <img src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=80" alt="Tree canopy">
-          <div class="photo-caption">Under the rain tree · December 2025</div>
+          <div class="photo-caption">Under the rain tree · December 2024</div>
         </div>
 
       </div>
@@ -1427,53 +1589,43 @@ footer {
       <div class="faq-list">
 
         <div class="faq-item">
-          <h3>Is this a book club?</h3>
-          <p>No. We don't discuss the book we're reading. Everyone reads their own thing in silence for two hours. Some people stay back to talk after.</p>
+          <h3 class="faq-q">When and where does it happen?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>Sundays, 8–10 AM. The location moves every week. We share the spot on Saturday at 4:05 PM, via WhatsApp.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Is it free?</h3>
-          <p>Yes. Always. Sunday is the cathedral and the cathedral doesn't charge.</p>
+          <h3 class="faq-q">Is it free?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>Yes. Always.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Do I need to register?</h3>
-          <p>No. If you want to know where Sunday is happening next, join the WhatsApp group via our Instagram bio. The location goes out every Saturday at 4:05 PM.</p>
+          <h3 class="faq-q">Do I need to RSVP?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>No. Show up. Joining the WhatsApp just gets you the Saturday location ping.</p>
         </div>
 
         <div class="faq-item">
-          <h3>What do I bring?</h3>
-          <p>A book. A water bottle. Sunglasses. Something to sit on if grass isn't friendly to you.</p>
+          <h3 class="faq-q">What do I bring?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>A book. That’s the only requirement. Some people bring water, coffee, a mat. We don’t.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Can I come alone?</h3>
-          <p>This is the question we get most. Yes. Most people come alone the first time. Almost everyone finds someone they end up talking to afterwards.</p>
+          <h3 class="faq-q">Can I come alone? Will I have to talk to anyone?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>Yes, you can come alone. Most people do. We read in silence for two hours. No one has to introduce themselves, share a passage, or perform anything.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Can I come with friends?</h3>
-          <p>Yes. As many as you'd like.</p>
+          <h3 class="faq-q">What if it rains?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>Then we don’t. The WhatsApp tells you by Saturday night.</p>
         </div>
 
         <div class="faq-item">
-          <h3>I'm not really a reader. Or I only read graphic novels. Or I read in Marathi/Hindi/Tamil. Am I welcome?</h3>
-          <p>Yes. All readers, all genres, all languages. The first-timer and the fifty-second Sunday regular are equally welcome.</p>
+          <h3 class="faq-q">How do I get on the WhatsApp?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>DM us on Instagram, @pune_bookies. One of us will add you.</p>
         </div>
 
         <div class="faq-item">
-          <h3>Why a sloth?</h3>
-          <p>Because we read slowly, and we like it that way.</p>
-        </div>
-
-        <div class="faq-item">
-          <h3>Where exactly is it?</h3>
-          <p>Pune. The specific spot changes weekly — Empress, Sambhaji, a farm in Wagholi, sometimes a botanical garden. The WhatsApp group is how you'll know.</p>
-        </div>
-
-        <div class="faq-item">
-          <h3>Can I sponsor / partner / collaborate?</h3>
-          <p>Probably. We're picky about it. Write to us at <a href="mailto:hello@punebookies.com">hello@punebookies.com</a> and tell us what you're thinking. We'll write back.</p>
+          <h3 class="faq-q">Are there other cities?<svg class="faq-rule" viewBox="0 0 120 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 30 1 60 3.5 T 118 3" fill="none" stroke="var(--ink-soft)" stroke-width="1.6" stroke-linecap="round"/></svg></h3>
+          <p>Bombay, Bengaluru, Jaipur.</p>
         </div>
 
       </div>
@@ -1611,14 +1763,17 @@ footer {
         <div class="footer-col">
           <h5>Get in touch</h5>
           <p>For partnerships, press, kind words, and complaints.</p>
-          <p style="margin-top: 1rem;"><a href="mailto:hello@punebookies.com">hello@punebookies.com</a></p>
+          <p style="margin-top: 1rem;">
+            Tanvi · <a href="mailto:tanvi.lele3944@gmail.com">tanvi.lele3944@gmail.com</a><br>
+            Shrey · <a href="mailto:shreyasjadhav531@gmail.com">shreyasjadhav531@gmail.com</a>
+          </p>
         </div>
 
         <div class="footer-col">
           <h5>Find us</h5>
           <a href="https://instagram.com/pune_bookies" target="_blank" rel="noopener">Instagram</a>
           <a href="#" target="_blank" rel="noopener">WhatsApp groups</a>
-          <a href="mailto:hello@punebookies.com">Email</a>
+          <a href="mailto:shreyasjadhav531@gmail.com">Email</a>
         </div>
 
         <div class="footer-col">
@@ -1632,7 +1787,7 @@ footer {
 
       <div class="footer-bottom">
         <div class="footer-mark">Pune <em>Bookies</em></div>
-        <div>Reading together since 2025 · Pune, India</div>
+        <div>Reading together since 2024 · Pune, India</div>
       </div>
     </div>
   </footer>
