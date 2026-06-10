@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pune Bookies — A reading community</title>
+<meta name="description" content="We read together. Every Sunday, 8 to 10 in the morning, under a tree somewhere in Pune.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper: #f4ecd8;
+  --paper-warm: #ead9b9;
+  --paper-deep: #e2cc9f;
+  --ink: #1f1611;
+  --ink-soft: #4a3a2a;
+  --ink-faint: #7a6a55;
+  --gulmohar: #c8553d;
+  --gulmohar-soft: #d97863;
+  --gulmohar-faint: #e8a89a;
+  --sage: #738c5a;
+  --sage-soft: #9bb07e;
+  --terracotta: #b56b3a;
+  --dusty-blue: #6c8a9c;
+  --gold: #b88840;
+  --shadow: rgba(31, 22, 17, 0.08);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Paper grain texture overlay (fixed) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='grain'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23grain)' opacity='0.18'/></svg>");
+  z-index: 100;
+  mix-blend-mode: multiply;
+}
+
+/* Soft warm wash */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(200, 85, 61, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(115, 140, 90, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(244, 236, 216, 0) 0%, rgba(226, 204, 159, 0.15) 100%);
+  z-index: 1;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================
+   TYPOGRAPHY
+   ============================ */
+
+.display {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0;
+  letter-spacing: -0.018em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.serif-italic {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+}
+
+.eyebrow {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 14;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  text-transform: lowercase;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: '·';
+  margin: 0 0.6em;
+  color: var(--gulmohar);
+}
+
+.tiny {
+  font-family: 'Lora', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+p { margin-bottom: 1.2em; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gulmohar);
+  padding-bottom: 1px;
+  transition: color 0.3s, border-color 0.3s;
+}
+a:hover {
+  color: var(--gulmohar);
+  border-color: var(--ink);
+}
+
+/* ============================
+   STRUCTURE
+   ============================ */
+
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+}
+
+.prose-column {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+section {
+  padding: clamp(4rem, 10vw, 8rem) 0;
+  position: relative;
+}
+
+.section-divider {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  opacity: 0.6;
+}
+
+.section-divider svg {
+  width: 80px;
+  height: auto;
+}
+
+/* ============================
+   HEADER / NAV
+   ============================ */
+
+header.top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1.3rem clamp(1.5rem, 5vw, 3.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+  mix-blend-mode: multiply;
+}
+
+header.top .mark {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 24;
+  font-size: 1.15rem;
+  color: var(--ink);
+  border: none;
+  padding: 0;
+}
+
+header.top .mark em {
+  font-style: italic;
+  color: var(--gulmohar);
+}
+
+header.top nav {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+header.top nav a {
+  color: var(--ink-soft);
+  border: none;
+  padding: 0;
+}
+
+header.top nav a:hover {
+  color: var(--gulmohar);
+}
+
+@media (max-width: 720px) {
+  header.top nav { display: none; }
+}
+
+/* ============================
+   HERO
+   ============================ */
+
+.hero {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 8rem 1.5rem 4rem;
+  position: relative;
+}
+
+.hero-inner {
+  max-width: 920px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-illustration {
+  width: min(640px, 85vw);
+  margin: 0 auto 2rem;
+  filter: drop-shadow(0 8px 24px rgba(31, 22, 17, 0.08));
+}
+
+.hero-wordmark {
+  font-size: clamp(4.5rem, 13vw, 9.5rem);
+  margin: 0;
+  position: relative;
+  line-height: 0.92;
+}
+
+.hero-wordmark .pune {
+  display: block;
+  font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0;
+}
+
+.hero-wordmark .bookies {
+  display: block;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1;
+  color: var(--gulmohar);
+  margin-top: -0.2em;
+  letter-spacing: -0.025em;
+}
+
+.hero-tagline {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 50, "opsz" 36;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  max-width: 30ch;
+  margin: 2.5rem auto 0;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.hero-tagline .stress {
+  display: block;
+  font-style: italic;
+  color: var(--ink);
+  margin-top: 0.75rem;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+}
+
+.hero-tagline .emoji-tree {
+  color: var(--sage);
+  font-style: normal;
+}
+
+.hero-meta {
+  margin-top: 4rem;
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.hero-meta span strong {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-variation-settings: "SOFT" 100, "opsz" 14;
+  color: var(--ink);
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 12;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  animation: floatDown 2.5s ease-in-out infinite;
+}
+
+@keyframes floatDown {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(-50%) translateY(6px); opacity: 0.9; }
+}
+
+/* ============================
+   MANIFESTO
+   ============================ */
+
+.manifesto {
+  position: relative;
+  padding-top: 6rem;
+}
+
+.manifesto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, var(--ink-faint));
+  opacity: 0.4;
+}
+
+.manifesto-eyebrow {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.manifesto h2 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 22ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.05;
+}
+
+.manifesto h2 em {
+  color: var(--gulmohar);
+}
+
+.manifesto p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.manifesto p:first-of-type::first-letter {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1;
+  font-size: 4.5em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.1em 0.1em 0 0;
+  color: var(--gulmohar);
+  font-weight: 400;
+}
+
+.manifesto .pull {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 72;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.3;
+  color: var(--ink);
+  text-align: center;
+  margin: 3.5rem auto;
+  max-width: 24ch;
+  position: relative;
+}
+
+.manifesto .pull::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--gulmohar);
+  margin: 0 auto 1.5rem;
+}
+
+.manifesto .pull::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--gulmohar);
+  margin: 1.5rem auto 0;
+}
+
+/* ============================
+   HOW SUNDAY WORKS
+   ============================ */
+
+.how-it-works {
+  background: linear-gradient(to bottom, transparent 0%, rgba(234, 217, 185, 0.4) 30%, rgba(234, 217, 185, 0.4) 70%, transparent 100%);
+  position: relative;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.section-head .eyebrow {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.section-head h2 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 144;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  max-width: 18ch;
+  margin: 0 auto;
+}
+
+.section-head h2 em {
+  color: var(--gulmohar);
+}
+
+.timeline {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5rem;
+  top: 1rem;
+  bottom: 1rem;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--gulmohar-faint) 10%, var(--gulmohar-faint) 90%, transparent);
+  opacity: 0.6;
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 7rem auto 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  align-items: start;
+  position: relative;
+}
+
+.timeline-time {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  font-size: 1.5rem;
+  color: var(--gulmohar);
+  font-weight: 400;
+  text-align: right;
+  padding-top: 0.1em;
+  letter-spacing: -0.01em;
+}
+
+.timeline-dot {
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border: 1.5px solid var(--gulmohar);
+  border-radius: 50%;
+  margin-top: 0.55em;
+  margin-left: -7px;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-dot.filled {
+  background: var(--gulmohar);
+}
+
+.timeline-content h3 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  font-size: 1.25rem;
+  margin-bottom: 0.4em;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.timeline-content p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .timeline::before { left: 2.5rem; }
+  .timeline-row { grid-template-columns: 4rem auto 1fr; gap: 1rem; }
+  .timeline-time { font-size: 1.1rem; }
+}
+
+/* ============================
+   ATMOSPHERE / PHOTOS
+   ============================ */
+
+.atmosphere {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.2rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.photo-tile {
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(31, 22, 17, 0.08);
+  background: var(--paper-deep);
+  aspect-ratio: 4 / 5;
+  transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1), box-shadow 0.6s;
+}
+
+.photo-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(31, 22, 17, 0.14);
+}
+
+.photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.92) contrast(1.02);
+}
+
+.photo-tile.t1 { grid-column: span 5; aspect-ratio: 4/5; }
+.photo-tile.t2 { grid-column: span 4; aspect-ratio: 4/5; margin-top: 2.5rem; }
+.photo-tile.t3 { grid-column: span 3; aspect-ratio: 3/4; }
+.photo-tile.t4 { grid-column: span 4; aspect-ratio: 4/5; }
+.photo-tile.t5 { grid-column: span 5; aspect-ratio: 5/4; margin-top: -1.5rem; }
+.photo-tile.t6 { grid-column: span 3; aspect-ratio: 3/4; margin-top: 1.5rem; }
+
+.photo-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(31, 22, 17, 0.7), transparent);
+  color: var(--paper);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 12;
+  font-size: 0.78rem;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.photo-tile:hover .photo-caption {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+  .photo-tile.t1, .photo-tile.t2, .photo-tile.t3,
+  .photo-tile.t4, .photo-tile.t5, .photo-tile.t6 {
+    grid-column: span 1;
+    margin-top: 0;
+    aspect-ratio: 3/4;
+  }
+}
+
+.photo-note {
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 14;
+  font-size: 0.95rem;
+  color: var(--ink-faint);
+  margin-top: 3rem;
+}
+
+/* ============================
+   STORIES
+   ============================ */
+
+.stories {
+  padding-top: 7rem;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.story {
+  position: relative;
+  padding-top: 2rem;
+}
+
+.story-mark {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1.5rem;
+}
+
+.story h3 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 36, "WONK" 1;
+  font-size: 1.45rem;
+  line-height: 1.25;
+  margin-bottom: 1.2rem;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.story p {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.story .byline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 12;
+  font-size: 0.85rem;
+  color: var(--gulmohar);
+  margin-top: 1.2rem;
+  display: block;
+}
+
+@media (max-width: 800px) {
+  .story-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+/* ============================
+   FAQ
+   ============================ */
+
+.faq {
+  padding-top: 7rem;
+  background: linear-gradient(to bottom, transparent, rgba(244, 236, 216, 0.6) 20%, rgba(234, 217, 185, 0.3) 80%, transparent);
+}
+
+.faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  padding: 1.8rem 0;
+  border-top: 1px solid rgba(31, 22, 17, 0.12);
+}
+
+.faq-item:last-child {
+  border-bottom: 1px solid rgba(31, 22, 17, 0.12);
+}
+
+.faq-item h3 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 24;
+  font-size: 1.2rem;
+  margin-bottom: 0.6rem;
+  color: var(--ink);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.faq-item p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ============================
+   SISTER CHAPTERS
+   ============================ */
+
+.network {
+  padding-top: 8rem;
+  text-align: center;
+}
+
+.network-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  max-width: 920px;
+  margin: 4rem auto 0;
+}
+
+.chapter {
+  text-align: center;
+}
+
+.chapter-mark {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.2rem;
+}
+
+.chapter h4 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 24;
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.chapter p {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 12;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.chapter.soon {
+  opacity: 0.55;
+}
+
+@media (max-width: 720px) {
+  .network-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+}
+
+/* ============================
+   COME ON SUNDAY
+   ============================ */
+
+.come {
+  padding-top: 7rem;
+  padding-bottom: 7rem;
+  text-align: center;
+  position: relative;
+}
+
+.come-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  max-width: 980px;
+  margin: 5rem auto 0;
+}
+
+.step {
+  text-align: center;
+  position: relative;
+}
+
+.step-num {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--gulmohar);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.step h4 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.step p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 22ch;
+  margin: 0 auto;
+}
+
+.step a {
+  border-color: var(--gulmohar);
+}
+
+@media (max-width: 760px) {
+  .come-steps { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+.closing-line {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 60;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--ink);
+  max-width: 22ch;
+  margin: 6rem auto 0;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ============================
+   FOOTER
+   ============================ */
+
+footer {
+  border-top: 1px solid rgba(31, 22, 17, 0.12);
+  margin-top: 4rem;
+  padding: 4rem 0 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-col h5 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 14;
+  font-size: 0.95rem;
+  color: var(--gulmohar);
+  margin-bottom: 0.9rem;
+  font-weight: 400;
+}
+
+.footer-col p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.footer-col p + p { margin-top: 0.4rem; }
+
+.footer-col a {
+  border: none;
+  font-size: 0.95rem;
+  color: var(--ink);
+  display: block;
+  padding: 0;
+  margin-bottom: 0.25rem;
+}
+
+.footer-col a:hover {
+  color: var(--gulmohar);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(31, 22, 17, 0.08);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-mark {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 24;
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.footer-mark em {
+  font-style: italic;
+  color: var(--gulmohar);
+}
+
+@media (max-width: 720px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ============================
+   REVEAL ANIMATIONS
+   ============================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s cubic-bezier(0.2, 0.6, 0.2, 1), transform 1s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger via inline delay */
+
+/* ============================
+   SELECTION
+   ============================ */
+
+::selection {
+  background: var(--gulmohar);
+  color: var(--paper);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ============================
+     HEADER
+     ============================ -->
+<header class="top">
+  <a href="#top" class="mark">Pune <em>Bookies</em></a>
+  <nav>
+    <a href="#manifesto">What this is</a>
+    <a href="#sundays">Sundays</a>
+    <a href="#stories">Stories</a>
+    <a href="#faq">FAQ</a>
+    <a href="#come">Come</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============================
+       HERO
+       ============================ -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="hero-illustration">
+        <!-- Watercolour tree + sloth illustration -->
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <filter id="watercolour" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="3" seed="3"/>
+              <feDisplacementMap in="SourceGraphic" scale="14"/>
+            </filter>
+            <filter id="paint-edge" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="7"/>
+              <feDisplacementMap in="SourceGraphic" scale="6"/>
+            </filter>
+            <radialGradient id="canopy1" cx="0.4" cy="0.4" r="0.7">
+              <stop offset="0%" stop-color="#e8a89a" stop-opacity="0.85"/>
+              <stop offset="60%" stop-color="#d97863" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#c8553d" stop-opacity="0.5"/>
+            </radialGradient>
+            <radialGradient id="canopy2" cx="0.5" cy="0.5" r="0.7">
+              <stop offset="0%" stop-color="#f4b8a6" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#c8553d" stop-opacity="0.3"/>
+            </radialGradient>
+            <radialGradient id="canopy3" cx="0.5" cy="0.5" r="0.7">
+              <stop offset="0%" stop-color="#9bb07e" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#738c5a" stop-opacity="0.3"/>
+            </radialGradient>
+            <radialGradient id="ground" cx="0.5" cy="0.3" r="0.6">
+              <stop offset="0%" stop-color="#9bb07e" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#738c5a" stop-opacity="0.15"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Ground shadow -->
+          <ellipse cx="300" cy="360" rx="200" ry="20" fill="url(#ground)" filter="url(#watercolour)" opacity="0.7"/>
+
+          <!-- Tree canopy washes (layered, painterly) -->
+          <ellipse cx="220" cy="130" rx="135" ry="105" fill="url(#canopy3)" filter="url(#watercolour)" opacity="0.7"/>
+          <ellipse cx="380" cy="120" rx="130" ry="110" fill="url(#canopy1)" filter="url(#watercolour)" opacity="0.8"/>
+          <ellipse cx="300" cy="100" rx="155" ry="95" fill="url(#canopy2)" filter="url(#watercolour)" opacity="0.7"/>
+          <ellipse cx="290" cy="160" rx="170" ry="80" fill="url(#canopy1)" filter="url(#watercolour)" opacity="0.55"/>
+
+          <!-- Trunk and branches -->
+          <g fill="none" stroke="#3d2818" stroke-linecap="round" filter="url(#paint-edge)">
+            <path d="M 300 360 Q 300 280 295 200 Q 290 150 285 100" stroke-width="14" opacity="0.75"/>
+            <path d="M 295 200 Q 240 170 195 145" stroke-width="6" opacity="0.65"/>
+            <path d="M 297 220 Q 350 200 395 175" stroke-width="7" opacity="0.7"/>
+            <path d="M 290 240 Q 250 230 215 220" stroke-width="4" opacity="0.55"/>
+            <path d="M 292 180 Q 320 165 345 152" stroke-width="3.5" opacity="0.5"/>
+          </g>
+
+          <!-- Flower petals/specks -->
+          <g filter="url(#paint-edge)">
+            <circle cx="180" cy="100" r="6" fill="#c8553d" opacity="0.7"/>
+            <circle cx="200" cy="80" r="4" fill="#d97863" opacity="0.6"/>
+            <circle cx="240" cy="60" r="5" fill="#c8553d" opacity="0.65"/>
+            <circle cx="320" cy="55" r="5" fill="#d97863" opacity="0.7"/>
+            <circle cx="360" cy="70" r="4" fill="#c8553d" opacity="0.6"/>
+            <circle cx="410" cy="90" r="6" fill="#d97863" opacity="0.65"/>
+            <circle cx="430" cy="120" r="4" fill="#c8553d" opacity="0.55"/>
+            <circle cx="155" cy="130" r="5" fill="#c8553d" opacity="0.6"/>
+            <circle cx="450" cy="155" r="4" fill="#d97863" opacity="0.55"/>
+            <circle cx="130" cy="160" r="3" fill="#c8553d" opacity="0.5"/>
+            <circle cx="260" cy="190" r="3" fill="#d97863" opacity="0.5"/>
+            <circle cx="340" cy="200" r="3" fill="#c8553d" opacity="0.5"/>
+            <!-- falling petals -->
+            <circle cx="200" cy="280" r="2.5" fill="#d97863" opacity="0.5"/>
+            <circle cx="380" cy="290" r="2.5" fill="#c8553d" opacity="0.5"/>
+            <circle cx="240" cy="320" r="2" fill="#d97863" opacity="0.4"/>
+            <circle cx="360" cy="335" r="2" fill="#c8553d" opacity="0.4"/>
+          </g>
+
+          <!-- Sloth on branch (simple, hand-drawn feel) -->
+          <g filter="url(#paint-edge)" transform="translate(308 195)">
+            <!-- body -->
+            <ellipse cx="0" cy="0" rx="22" ry="14" fill="#8b6748" opacity="0.85"/>
+            <ellipse cx="-3" cy="-2" rx="16" ry="9" fill="#a07d5a" opacity="0.7"/>
+            <!-- head -->
+            <ellipse cx="18" cy="-8" rx="11" ry="9" fill="#8b6748" opacity="0.85"/>
+            <!-- face hint -->
+            <circle cx="22" cy="-9" r="1.5" fill="#1f1611" opacity="0.7"/>
+            <circle cx="15" cy="-9" r="1.5" fill="#1f1611" opacity="0.7"/>
+            <!-- arms holding "book" -->
+            <ellipse cx="-2" cy="6" rx="6" ry="4" fill="#6e4f33" opacity="0.7"/>
+            <!-- the book -->
+            <rect x="-8" y="-2" width="14" height="9" fill="#f4ecd8" opacity="0.9" rx="0.5"/>
+            <line x1="-1" y1="-2" x2="-1" y2="7" stroke="#8b6748" stroke-width="0.5" opacity="0.6"/>
+          </g>
+
+        </svg>
+      </div>
+
+      <h1 class="hero-wordmark display">
+        <span class="pune">Pune</span>
+        <span class="bookies">Bookies</span>
+      </h1>
+
+      <p class="hero-tagline">
+        We read together. Every Sunday, eight to ten, under a tree somewhere in Pune.
+        <span class="stress">We're also <em>not</em> that kind of bookie. <span class="emoji-tree">🌳</span></span>
+      </p>
+
+      <div class="hero-meta">
+        <span><strong>43,900</strong>readers and counting</span>
+        <span><strong>52</strong>Sundays a year</span>
+        <span><strong>4</strong>cities and growing</span>
+      </div>
+
+    </div>
+
+    <div class="scroll-cue">↓ keep going</div>
+  </section>
+
+
+  <!-- ============================
+       MANIFESTO
+       ============================ -->
+  <section class="manifesto" id="manifesto">
+    <div class="container">
+      <div class="prose-column">
+
+        <div class="manifesto-eyebrow">
+          <span class="eyebrow">what this is</span>
+        </div>
+
+        <h2 class="display">
+          A reading community,
+          <em>but not really.</em>
+        </h2>
+
+        <p>
+          A few hundred of us turn up on a Sunday morning, find a tree, and read for two hours. Some of us read poetry. Some read graphic novels. Most of us are quiet. A few of us stay back to talk after.
+        </p>
+
+        <p>
+          We started in early 2025 because reading had become hard to protect from everything else. The phone. The laundry. The rest of life. It turned out a lot of people in Pune were having the same problem. We're closer to 250 on a typical Sunday now.
+        </p>
+
+        <div class="pull serif-italic">
+          Sunday is the cathedral. We don't charge for the cathedral.
+        </div>
+
+        <p>
+          We don't run ads in our WhatsApp groups. We don't put the page-guessing game on an app. We're stubborn about the small things, which we think is the only way to be useful about the larger ones.
+        </p>
+
+        <p>
+          We're one chapter of a network — Bombay, Bengaluru, Jaipur, and a few more on the way. Each city runs its own Sunday, its own way. We share a name and a way of doing things, and not much else.
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       HOW SUNDAY WORKS
+       ============================ -->
+  <section class="how-it-works" id="sundays">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">how Sunday actually works</span>
+        <h2 class="display">It's <em>simpler</em> than you think.</h2>
+      </div>
+
+      <div class="timeline">
+
+        <div class="timeline-row">
+          <div class="timeline-time">Sat, 4:05 PM</div>
+          <div class="timeline-dot filled"></div>
+          <div class="timeline-content">
+            <h3>The location goes out</h3>
+            <p>Every Saturday at 4:05 in the afternoon, the next morning's spot is shared in the WhatsApp groups. Could be a park, could be a farm, could be a botanical garden. It changes weekly.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">7:45 AM</div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3>You're heading there</h3>
+            <p>Bring a book. A water bottle. Sunglasses if you need them. Something to sit on if grass and you aren't friends. That's it.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">8:00 AM</div>
+          <div class="timeline-dot filled"></div>
+          <div class="timeline-content">
+            <h3>Show up. Hello.</h3>
+            <p>There's a small welcome table. A bookmark for you. A basket for the page-guessing game — drop in your guess for how many pages we'll collectively read today. We mean it. Pen and paper.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">8:30 AM</div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3>Pick a spot. Read.</h3>
+            <p>This is not a book club. We don't discuss the book. Everyone reads their own thing. The silence is the point. Two hours of it, more or less, with the wind doing whatever it does.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">9:00 AM</div>
+          <div class="timeline-dot filled"></div>
+          <div class="timeline-content">
+            <h3>Page guesses get collected</h3>
+            <p>Someone walks past the basket and takes the slips. We add up the pages everyone read. The closest guess wins something small — a bookmark from a previous week, a postcard. We don't make a thing of it.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">9:45 AM</div>
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h3>A gentle wrap-up</h3>
+            <p>Someone walks through the readers letting people know we'll wrap soon. Group photo at 9:50 if you want to be in it. If you don't, you step to the side. No explanation needed.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-time">10:00 AM</div>
+          <div class="timeline-dot filled"></div>
+          <div class="timeline-content">
+            <h3>Some people leave. Some stay.</h3>
+            <p>The official Sunday is over. Some head off to breakfast. Some stand around and talk about what they read, what they didn't, the weather, whatever. A few people meet a friend they didn't know they had.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       ATMOSPHERE / PHOTOS
+       ============================ -->
+  <section class="atmosphere">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">what it looks like</span>
+        <h2 class="display">A year of <em>Sundays</em>.</h2>
+      </div>
+
+      <div class="photo-grid">
+
+        <div class="photo-tile t1">
+          <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&q=80" alt="Reading">
+          <div class="photo-caption">Empress Botanical Garden · March 2026</div>
+        </div>
+
+        <div class="photo-tile t2">
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=700&q=80" alt="Books in grass">
+          <div class="photo-caption">A regular's spot · February 2026</div>
+        </div>
+
+        <div class="photo-tile t3">
+          <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80" alt="Reading outdoors">
+          <div class="photo-caption">Sambhaji Park · April 2026</div>
+        </div>
+
+        <div class="photo-tile t4">
+          <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=700&q=80" alt="Open book">
+          <div class="photo-caption">A reader, unnamed · January 2026</div>
+        </div>
+
+        <div class="photo-tile t5">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=900&q=80" alt="Person reading">
+          <div class="photo-caption">The morning the geese came · November 2025</div>
+        </div>
+
+        <div class="photo-tile t6">
+          <img src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=80" alt="Tree canopy">
+          <div class="photo-caption">Under the rain tree · December 2025</div>
+        </div>
+
+      </div>
+
+      <p class="photo-note">— our team has shot a year of Sundays. these are placeholders —</p>
+
+    </div>
+  </section>
+
+
+  <!-- ============================
+       STORIES
+       ============================ -->
+  <section class="stories" id="stories">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">small notes</span>
+        <h2 class="display">Three <em>Sundays.</em></h2>
+      </div>
+
+      <div class="story-grid">
+
+        <div class="story">
+          <svg class="story-mark" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <filter id="m1-rough">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="2"/>
+                <feDisplacementMap in="SourceGraphic" scale="3"/>
+              </filter>
+            </defs>
+            <g filter="url(#m1-rough)">
+              <ellipse cx="30" cy="35" rx="22" ry="14" fill="#d97863" opacity="0.5"/>
+              <ellipse cx="30" cy="30" rx="18" ry="14" fill="#c8553d" opacity="0.45"/>
+              <path d="M 18 30 L 42 30 M 24 36 L 36 36" stroke="#1f1611" stroke-width="1.2" opacity="0.6"/>
+            </g>
+          </svg>
+          <h3>The first Sunday I came alone.</h3>
+          <p>
+            I almost didn't go. I'd told a friend I would and she bailed and I thought, well that's that, I'll go next week. I went anyway. I was the third person there. By 8:30 there were eighty of us. I read forty pages of a book I'd been carrying around for three months. I didn't talk to anyone. I came back the next Sunday.
+          </p>
+          <span class="byline">— Sneha, regular since April</span>
+        </div>
+
+        <div class="story">
+          <svg class="story-mark" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <filter id="m2-rough">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="5"/>
+                <feDisplacementMap in="SourceGraphic" scale="3"/>
+              </filter>
+            </defs>
+            <g filter="url(#m2-rough)">
+              <ellipse cx="30" cy="35" rx="20" ry="12" fill="#9bb07e" opacity="0.5"/>
+              <ellipse cx="22" cy="32" rx="6" ry="8" fill="#f4ecd8" opacity="0.95"/>
+              <ellipse cx="32" cy="30" rx="6" ry="8" fill="#f4ecd8" opacity="0.95"/>
+              <ellipse cx="42" cy="32" rx="6" ry="8" fill="#f4ecd8" opacity="0.95"/>
+              <path d="M 20 26 L 21 23 L 22 26 M 30 24 L 31 21 L 32 24 M 40 26 L 41 23 L 42 26" stroke="#c8553d" stroke-width="1" fill="none" opacity="0.8"/>
+            </g>
+          </svg>
+          <h3>The morning the geese came.</h3>
+          <p>
+            We were at a venue we hadn't used before. Around 9:15, three geese walked across the lawn, in a perfect line, past about a hundred and twenty of us reading. Nobody made a sound. The geese kept walking. Somebody took a photo. We talk about that morning more than we talk about most Sundays. Nothing happened. That was the whole event.
+          </p>
+          <span class="byline">— Aman, regular</span>
+        </div>
+
+        <div class="story">
+          <svg class="story-mark" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <filter id="m3-rough">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="9"/>
+                <feDisplacementMap in="SourceGraphic" scale="3"/>
+              </filter>
+            </defs>
+            <g filter="url(#m3-rough)">
+              <rect x="14" y="20" width="32" height="22" fill="#f4ecd8" opacity="0.95"/>
+              <rect x="14" y="20" width="32" height="22" fill="none" stroke="#1f1611" stroke-width="1" opacity="0.6"/>
+              <line x1="30" y1="20" x2="30" y2="42" stroke="#1f1611" stroke-width="0.8" opacity="0.4"/>
+              <line x1="18" y1="26" x2="26" y2="26" stroke="#1f1611" stroke-width="0.6" opacity="0.4"/>
+              <line x1="18" y1="30" x2="26" y2="30" stroke="#1f1611" stroke-width="0.6" opacity="0.4"/>
+              <line x1="18" y1="34" x2="26" y2="34" stroke="#1f1611" stroke-width="0.6" opacity="0.4"/>
+              <line x1="34" y1="26" x2="42" y2="26" stroke="#1f1611" stroke-width="0.6" opacity="0.4"/>
+              <line x1="34" y1="30" x2="42" y2="30" stroke="#1f1611" stroke-width="0.6" opacity="0.4"/>
+              <ellipse cx="30" cy="48" rx="14" ry="3" fill="#d97863" opacity="0.4"/>
+            </g>
+          </svg>
+          <h3>What I keep finding here.</h3>
+          <p>
+            The first month I started this I thought it was about the books. By the third month I was certain it was about the people. By the sixth I'd stopped trying to figure out what it was about and started just showing up. I think that's the actual thing — a place to show up that doesn't ask you for anything in exchange.
+          </p>
+          <span class="byline">— Tanvi, on starting this</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       FAQ
+       ============================ -->
+  <section class="faq" id="faq">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">things people quietly wonder</span>
+        <h2 class="display">Probably <em>your</em> question.</h2>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <h3>Is this a book club?</h3>
+          <p>No. We don't discuss the book we're reading. Everyone reads their own thing in silence for two hours. Some people stay back to talk after.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Is it free?</h3>
+          <p>Yes. Always. Sunday is the cathedral and the cathedral doesn't charge.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Do I need to register?</h3>
+          <p>No. If you want to know where Sunday is happening next, join the WhatsApp group via our Instagram bio. The location goes out every Saturday at 4:05 PM.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>What do I bring?</h3>
+          <p>A book. A water bottle. Sunglasses. Something to sit on if grass isn't friendly to you.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Can I come alone?</h3>
+          <p>This is the question we get most. Yes. Most people come alone the first time. Almost everyone finds someone they end up talking to afterwards.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Can I come with friends?</h3>
+          <p>Yes. As many as you'd like.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>I'm not really a reader. Or I only read graphic novels. Or I read in Marathi/Hindi/Tamil. Am I welcome?</h3>
+          <p>Yes. All readers, all genres, all languages. The first-timer and the fifty-second Sunday regular are equally welcome.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Why a sloth?</h3>
+          <p>Because we read slowly, and we like it that way.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Where exactly is it?</h3>
+          <p>Pune. The specific spot changes weekly — Empress, Sambhaji, a farm in Wagholi, sometimes a botanical garden. The WhatsApp group is how you'll know.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Can I sponsor / partner / collaborate?</h3>
+          <p>Probably. We're picky about it. Write to us at <a href="mailto:hello@punebookies.com">hello@punebookies.com</a> and tell us what you're thinking. We'll write back.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       SISTER CHAPTERS
+       ============================ -->
+  <section class="network">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">sister chapters</span>
+        <h2 class="display">We're not <em>alone</em>.</h2>
+      </div>
+
+      <p style="max-width: 540px; margin: 0 auto; font-size: 1.05rem; line-height: 1.7; color: var(--ink-soft);">
+        Pune is one of four cities right now. The others run their own Sundays, their own way. Same name. Different trees.
+      </p>
+
+      <div class="network-grid">
+
+        <div class="chapter">
+          <svg class="chapter-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <filter id="c1-rough">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="1"/>
+                <feDisplacementMap in="SourceGraphic" scale="4"/>
+              </filter>
+            </defs>
+            <g filter="url(#c1-rough)">
+              <ellipse cx="40" cy="40" rx="28" ry="22" fill="#6c8a9c" opacity="0.4"/>
+              <ellipse cx="40" cy="38" rx="22" ry="18" fill="#7a96a8" opacity="0.5"/>
+              <path d="M 25 50 Q 40 35 55 50" stroke="#1f1611" stroke-width="1.2" fill="none" opacity="0.55"/>
+              <circle cx="40" cy="32" r="3" fill="#c8553d" opacity="0.6"/>
+            </g>
+          </svg>
+          <h4>Bombay Bookies</h4>
+          <p>Mumbai</p>
+        </div>
+
+        <div class="chapter">
+          <svg class="chapter-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g filter="url(#c1-rough)">
+              <ellipse cx="40" cy="42" rx="26" ry="22" fill="#9bb07e" opacity="0.45"/>
+              <ellipse cx="35" cy="35" rx="18" ry="20" fill="#738c5a" opacity="0.5"/>
+              <path d="M 22 50 Q 40 36 58 50" stroke="#1f1611" stroke-width="1.2" fill="none" opacity="0.5"/>
+              <circle cx="42" cy="30" r="3" fill="#c8553d" opacity="0.55"/>
+            </g>
+          </svg>
+          <h4>Bengaluru Bookies</h4>
+          <p>Bengaluru</p>
+        </div>
+
+        <div class="chapter">
+          <svg class="chapter-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g filter="url(#c1-rough)">
+              <ellipse cx="40" cy="40" rx="28" ry="20" fill="#d97863" opacity="0.45"/>
+              <ellipse cx="40" cy="36" rx="22" ry="16" fill="#c8553d" opacity="0.45"/>
+              <path d="M 25 48 Q 40 34 55 48" stroke="#1f1611" stroke-width="1.2" fill="none" opacity="0.55"/>
+              <circle cx="38" cy="32" r="3" fill="#b88840" opacity="0.6"/>
+            </g>
+          </svg>
+          <h4>Jaipur Bookies</h4>
+          <p>Jaipur</p>
+        </div>
+
+        <div class="chapter soon">
+          <svg class="chapter-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g filter="url(#c1-rough)">
+              <ellipse cx="40" cy="40" rx="26" ry="20" fill="#7a6a55" opacity="0.25"/>
+              <circle cx="40" cy="40" r="14" fill="none" stroke="#7a6a55" stroke-width="1" opacity="0.5" stroke-dasharray="2 3"/>
+              <text x="40" y="44" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#7a6a55" opacity="0.7">soon</text>
+            </g>
+          </svg>
+          <h4>Your city?</h4>
+          <p>Maybe</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       COME ON SUNDAY
+       ============================ -->
+  <section class="come" id="come">
+    <div class="container">
+
+      <div class="section-head">
+        <span class="eyebrow">how to actually come</span>
+        <h2 class="display">Three <em>steps.</em> That's it.</h2>
+      </div>
+
+      <div class="come-steps">
+
+        <div class="step">
+          <span class="step-num">1</span>
+          <h4>Follow on Instagram</h4>
+          <p>The bio has the WhatsApp link. <a href="https://instagram.com/pune_bookies" target="_blank" rel="noopener">@pune_bookies</a></p>
+        </div>
+
+        <div class="step">
+          <span class="step-num">2</span>
+          <h4>Join the WhatsApp group</h4>
+          <p>The location for next Sunday goes out every Saturday at 4:05 PM. Nothing else.</p>
+        </div>
+
+        <div class="step">
+          <span class="step-num">3</span>
+          <h4>Show up on Sunday</h4>
+          <p>8 AM. Bring a book. We'll be there.</p>
+        </div>
+
+      </div>
+
+      <p class="closing-line">
+        And if it's not for you, that's fine too.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ============================
+       FOOTER
+       ============================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-col">
+          <h5>Get in touch</h5>
+          <p>For partnerships, press, kind words, and complaints.</p>
+          <p style="margin-top: 1rem;"><a href="mailto:hello@punebookies.com">hello@punebookies.com</a></p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Find us</h5>
+          <a href="https://instagram.com/pune_bookies" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" target="_blank" rel="noopener">WhatsApp groups</a>
+          <a href="mailto:hello@punebookies.com">Email</a>
+        </div>
+
+        <div class="footer-col">
+          <h5>The network</h5>
+          <a href="#">Bombay Bookies</a>
+          <a href="#">Bengaluru Bookies</a>
+          <a href="#">Jaipur Bookies</a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-mark">Pune <em>Bookies</em></div>
+        <div>Reading together since 2025 · Pune, India</div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+// Subtle reveal-on-scroll
+const reveals = document.querySelectorAll('section > .container, section > .hero-inner, .timeline-row, .story, .chapter, .step, .faq-item, .photo-tile');
+reveals.forEach(el => el.classList.add('reveal'));
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+reveals.forEach(el => obs.observe(el));
+
+// Stagger timeline + stories
+document.querySelectorAll('.timeline-row, .story, .chapter, .step, .faq-item').forEach((el, i) => {
+  el.style.transitionDelay = (i * 60) + 'ms';
+});
+</script>
+
+</body>
+</html>
