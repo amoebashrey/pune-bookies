@@ -947,6 +947,72 @@ footer {
 }
 
 </style>
+
+<!-- ============================
+     ARRIVAL SEQUENCE (motion layer — see animations.js)
+     Layered on top; nothing above is modified.
+     ============================ -->
+<style id="pb-arrival">
+  /* Neutralise the hero's own scroll-reveal while the bloom runs, so the
+     two don't fight over .hero-inner. */
+  html[data-arrival="running"] .hero .hero-inner.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Start state: hide every piece the bloom animates in, so there's no
+     flash of final content before animations.js takes over. */
+  html[data-arrival="running"] .hero-illustration ellipse,
+  html[data-arrival="running"] .hero-illustration g {
+    opacity: 0;
+  }
+  html[data-arrival="running"] .hero-wordmark .pune,
+  html[data-arrival="running"] .hero-wordmark .bookies,
+  html[data-arrival="running"] .hero-tagline,
+  html[data-arrival="running"] .hero-meta,
+  html[data-arrival="running"] .scroll-cue {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* No bloom, no float, no reveal drift — settled state immediately. */
+    .scroll-cue { animation: none; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+
+  /* Lenis smooth-scroll (#4) — recommended baseline. */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: clip; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
+</style>
+
+<script>
+  /* Arrival gate — runs before paint so the hero never flashes.
+     First visit in a session → run the bloom. Repeat visit or
+     reduced-motion → settled state, no animation. */
+  (function (d) {
+    var KEY = 'pb_arrival_seen';
+    var reduce = window.matchMedia &&
+                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen;
+    try { seen = sessionStorage.getItem(KEY); } catch (e) { seen = '1'; }
+
+    if (seen || reduce) {
+      d.documentElement.setAttribute('data-arrival', 'done');
+    } else {
+      d.documentElement.setAttribute('data-arrival', 'running');
+      /* Failsafe: never leave the hero hidden if animations.js fails. */
+      setTimeout(function () {
+        if (d.documentElement.getAttribute('data-arrival') === 'running') {
+          d.documentElement.setAttribute('data-arrival', 'done');
+        }
+      }, 6000);
+    }
+  })(document);
+</script>
 </head>
 
 <body>
@@ -1594,6 +1660,10 @@ document.querySelectorAll('.timeline-row, .story, .chapter, .step, .faq-item').f
   el.style.transitionDelay = (i * 60) + 'ms';
 });
 </script>
+
+<!-- Motion layer -->
+<script src="lenis.min.js" defer></script>
+<script src="animations.js" defer></script>
 
 </body>
 </html>
