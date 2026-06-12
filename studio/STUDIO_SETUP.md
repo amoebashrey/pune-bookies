@@ -53,12 +53,20 @@ Sign in with the same Google account. You should see Sundays / Collaborations / 
 
 ## 6. Put the studio online (10 min)
 
-So the team can edit from anywhere, not just this computer:
+So the team can edit from anywhere, not just this computer. Two ways — pick one.
 
+**Option A — on Vercel, next to the website (recommended; everything in one dashboard):**
+1. vercel.com → **Add New → Project** → import the same `pune-bookies` GitHub repo again.
+2. On the configure screen: set **Root Directory** to `studio` (everything else is preconfigured by `studio/vercel.json`).
+3. Add one **Environment Variable**: `SANITY_STUDIO_PROJECT_ID` = the Project ID from step 1. → **Deploy**.
+4. You'll get a URL like `pune-bookies-studio.vercel.app`. **One more step or sign-in will fail:** at sanity.io/manage → project → **API → CORS origins** → Add origin → paste that URL (with `https://`, allow credentials ✓).
+5. Later, the same project can live at `studio.punebookies.com` (Vercel → Domains).
+
+**Option B — Sanity's own hosting (fewer steps, separate dashboard):**
 ```
 npm run deploy
 ```
-Pick a name like `pune-bookies` → the studio appears at `pune-bookies.sanity.studio`. (Alternative: deploy the `studio/` folder as its own Vercel project — either works; `sanity deploy` is the simpler button.)
+Pick a name like `pune-bookies` → the studio appears at `pune-bookies.sanity.studio`. CORS is handled for you.
 
 ## 7. Invite the team (2 min)
 
