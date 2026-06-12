@@ -1,6 +1,7 @@
 ---
 import SectionHead from './SectionHead.astro';
-import { people } from '../../content/site';
+import { getPeople } from '../../lib/cms';
+const people = await getPeople();
 ---
 <section class="brands-people">
   <div class="container">

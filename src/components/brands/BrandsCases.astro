@@ -1,6 +1,7 @@
 ---
 import SectionHead from './SectionHead.astro';
-import { brandCases } from '../../content/site';
+import { getCases } from '../../lib/cms';
+const brandCases = await getCases();
 ---
 <section class="brands-cases">
   <div class="container">

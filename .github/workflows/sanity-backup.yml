@@ -1,0 +1,46 @@
+# Nightly export of the Sanity dataset, kept as a workflow artifact.
+#
+# Why artifacts and not commits to /backups: the dataset contains
+# partner inquiries (names, emails, messages) — committing those to a
+# repo means personal data in git history forever, and the repo bloats
+# by megabytes a night. Artifacts are private to repo collaborators,
+# auto-expire, and restoring is one `sanity dataset import`.
+#
+# Needs two repository secrets (Settings → Secrets and variables → Actions):
+#   SANITY_PROJECT_ID   — from sanity.io/manage
+#   SANITY_AUTH_TOKEN   — a VIEWER token (read-only is enough to export)
+
+name: Sanity nightly backup
+
+on:
+  schedule:
+    - cron: '30 21 * * *'   # 03:00 IST, nightly
+  workflow_dispatch: {}      # and on demand from the Actions tab
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    if: ${{ vars.SANITY_BACKUP_ENABLED != 'false' }}
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Export dataset
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+        run: |
+          if [ -z "$SANITY_PROJECT_ID" ] || [ -z "$SANITY_AUTH_TOKEN" ]; then
+            echo "::error::SANITY_PROJECT_ID / SANITY_AUTH_TOKEN secrets are not set — see studio/STUDIO_SETUP.md §10."
+            exit 1
+          fi
+          npx -y sanity@latest dataset export production backup.tar.gz \
+            --project "$SANITY_PROJECT_ID" --no-prompt
+
+      - name: Keep it (90 days)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sanity-production-${{ github.run_id }}
+          path: backup.tar.gz
+          retention-days: 90

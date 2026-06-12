@@ -1,6 +1,7 @@
 ---
 import SectionHead from './SectionHead.astro';
-import { brandStats } from '../../content/site';
+import { getStats } from '../../lib/cms';
+const brandStats = await getStats();
 ---
 <section class="brands-numbers" id="numbers" tabindex="-1">
   <div class="petal-moment" aria-hidden="true"></div>

@@ -43,6 +43,11 @@ const {
 const SITE = (Astro.site ?? new URL('https://pune-bookies.vercel.app')).origin;
 const canonical = SITE + (path === '/' ? '/' : path);
 const ogImageAbs = SITE + ogImage;
+
+// Umami (privacy-respecting counting, no cookies) — only renders when
+// configured. PUBLIC_ on purpose: the website id is not a secret.
+const UMAMI_SRC = import.meta.env.PUBLIC_UMAMI_SRC;
+const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 ---
 <!DOCTYPE html>
 <html lang="en-IN">
@@ -130,6 +135,10 @@ const ogImageAbs = SITE + ogImage;
 <!-- Motion layer -->
 <script is:inline src="/lenis.min.js" defer></script>
 <script is:inline src="/animations.js" defer></script>
+
+<!-- Measurement — we don't track people, we count visits -->
+{UMAMI_SRC && UMAMI_ID && <script is:inline defer src={UMAMI_SRC} data-website-id={UMAMI_ID}></script>}
+<script is:inline src="/track.js" defer></script>
 <slot name="scripts" />
 
 </body>

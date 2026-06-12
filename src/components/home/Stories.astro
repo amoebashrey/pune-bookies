@@ -1,5 +1,6 @@
 ---
-import { stories } from '../../content/site';
+import { getStories } from '../../lib/cms';
+const stories = await getStories();
 ---
 <section class="stories" id="stories" tabindex="-1">
   <div class="container">
