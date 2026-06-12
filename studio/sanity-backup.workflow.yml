@@ -1,3 +1,9 @@
+# ⚠ PARKED at studio/sanity-backup.workflow.yml: the push credential on this
+# machine lacks the GitHub `workflow` scope, so it cannot create Action files.
+# To activate: `git mv studio/sanity-backup.workflow.yml .github/workflows/sanity-backup.yml`
+# and push (after `gh auth refresh -h github.com -s workflow`, or from any
+# normally-authed machine). It is inert until the two secrets exist anyway.
+#
 # Nightly export of the Sanity dataset, kept as a workflow artifact.
 #
 # Why artifacts and not commits to /backups: the dataset contains
