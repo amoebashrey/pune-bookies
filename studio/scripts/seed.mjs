@@ -70,6 +70,7 @@ const docs = [
     ['Can I come alone? Will I have to talk to anyone?', 'Yes, you can come alone. Most people do. We read in silence for two hours. No one has to introduce themselves, share a passage, or perform anything.'],
     ['What if it rains?', "Then we don't. The WhatsApp tells you by Saturday night."],
     ['How do I get on the WhatsApp?', 'DM us on Instagram, @pune_bookies. One of us will add you.'],
+    ["Will I end up in the photos?", "Only if you want to. The group photo at 9:50 is opt-in by walking into it; step aside and nobody minds. If a photo of you is up somewhere and you'd rather it weren't, DM us and it comes down."],
     ['Are there other cities?', 'Bombay, Bengaluru, Jaipur.'],
   ].map(([question, answer], i) => ({
     _id: `faq-${i + 1}`, _type: 'faqItem', question, answer, order: (i + 1) * 10, visible: true,

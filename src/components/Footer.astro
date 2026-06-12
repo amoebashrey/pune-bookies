@@ -1,5 +1,6 @@
 ---
 import { getSettings } from '../lib/cms';
+import { colophonLine } from '../lib/edition';
 const settings = await getSettings();
 
 interface Props {
@@ -46,6 +47,7 @@ const enc = (s: string) => s.split('').map((c) => `&#${c.charCodeAt(0)};`).join(
     <div class="footer-bottom">
       <div class="footer-mark">Pune <em>Bookies</em></div>
       <div>{settings.footerTagline}</div>
+      <a class="colophon-link" href="/colophon">{colophonLine}</a>
     </div>
   </div>
 </footer>

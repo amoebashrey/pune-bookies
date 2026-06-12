@@ -58,6 +58,7 @@ export const faqs = [
   { q: 'Can I come alone? Will I have to talk to anyone?', a: 'Yes, you can come alone. Most people do. We read in silence for two hours. No one has to introduce themselves, share a passage, or perform anything.' },
   { q: 'What if it rains?', a: "Then we don't. The WhatsApp tells you by Saturday night." },
   { q: 'How do I get on the WhatsApp?', a: 'DM us on Instagram, @pune_bookies. One of us will add you.' },
+  { q: 'Will I end up in the photos?', a: "Only if you want to. The group photo at 9:50 is opt-in by walking into it; step aside and nobody minds. If a photo of you is up somewhere and you'd rather it weren't, DM us and it comes down." },
   { q: 'Are there other cities?', a: 'Bombay, Bengaluru, Jaipur.' },
 ];
 

@@ -3,10 +3,20 @@
   <url>
     <loc>https://pune-bookies.vercel.app/</loc>
     <lastmod>2026-06-12</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://pune-bookies.vercel.app/brands</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://pune-bookies.vercel.app/privacy</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+  </url>
+  <url>
+    <loc>https://pune-bookies.vercel.app/colophon</loc>
     <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
   </url>

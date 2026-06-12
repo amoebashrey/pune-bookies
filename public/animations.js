@@ -339,6 +339,7 @@ const ATMOSPHERE = {
          </div>
          <div class="ds-count"></div>
          <div class="ds-where">${C.WHERE_LINE}</div>
+         <a class="ds-cal" href="/sunday.ics" data-track="calendar_add">add to calendar</a>
        </div>`;
 
     const dateText  = el.querySelector('.ds-date-text');

@@ -411,7 +411,7 @@ header.top .nav-toggle {
 #next-sunday {
   position: relative; z-index: 2;
   width: max-content; max-width: 90vw;
-  min-height: 186px;            /* reserves the stamp's space pre-JS */
+  min-height: 216px;            /* reserves the stamp space pre-JS (incl. calendar link) */
   margin: 4rem auto;
   padding-block: 3rem;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -1668,3 +1668,74 @@ hr.hairline {
 @media (prefers-reduced-motion: reduce) {
   .quiet-cta { transition: none; }
 }
+
+/* ============================
+   COLOPHON — the edition stamp
+   ============================ */
+
+.colophon-link {
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: rgba(31, 22, 17, 0.4);
+  border: none;
+  padding: 0;
+}
+.colophon-link:hover { color: var(--gulmohar); }
+
+.colophon { padding-top: 10rem; }
+.colophon-title { font-size: clamp(2.2rem, 5vw, 3.2rem); text-align: center; margin-bottom: 2.4rem; text-wrap: balance; }
+.colophon-title em { color: var(--gulmohar); }
+.colophon-intro { font-size: 1.05rem; line-height: 1.8; color: var(--ink-soft); }
+.colophon-entry { margin-top: 3rem; }
+.colophon-edition {
+  font-size: 1.3rem;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+  font-weight: 400;
+}
+.colophon-ord {
+  font-family: 'Lora', serif;
+  font-style: normal;
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+.colophon-entry p { font-size: 1rem; line-height: 1.8; color: var(--ink-soft); }
+.colophon-foot {
+  margin-top: 4rem;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "opsz" 14;
+  font-size: 0.92rem;
+  color: var(--ink-faint);
+}
+
+/* "add to calendar" under the countdown stamp */
+#next-sunday .ds-cal {
+  margin-top: 0.5rem;
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--gulmohar-faint);
+}
+#next-sunday .ds-cal:hover { color: var(--gulmohar); }
+
+/* privacy page prose */
+.privacy { padding-top: 10rem; }
+.privacy h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); text-align: center; margin-bottom: 2.4rem; text-wrap: balance; }
+.privacy h1 em { color: var(--gulmohar); }
+.privacy h2 {
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  font-weight: 400;
+  font-size: 1.35rem;
+  margin: 2.6rem 0 0.8rem;
+}
+.privacy p, .privacy li { font-size: 1rem; line-height: 1.8; color: var(--ink-soft); }
+.privacy ul { padding-left: 1.2rem; }
