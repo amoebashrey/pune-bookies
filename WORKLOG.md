@@ -62,3 +62,28 @@
 - Judgment: footer moved outside <main> on the homepage (was inside) — landmark correctness, no visual delta (position:relative/z-2 unchanged); SharedDefs ships the union of both pages' filter defs (unused defs render nothing)
 - Judgment: npm cache had root-owned files (sudo unavailable) — used --cache /tmp/npm-cache rather than asking for credentials
 - Accepted risk: path-to-regexp ReDoS advisory in the Vercel adapter's build-time routing-utils; the 'fix' downgrades the adapter a major version. Build-time only, no user input touches it.
+
+### Checkpoint — Phases 4+8 (was: gates 4 and 8)
+- /studio complete: 11 schemas, plain-language descriptions everywhere, char limits tied to design constants (warn 90% / block 100%), required alt text with reasons, min image dimensions, siteSettings singleton locked against delete/duplicate, partnerInquiry CRM grouped by status, in-Studio guide page
+- Drive sync: official API, read-only service account, idempotent, errors written for humans; seed script uses createIfNotExists (never clobbers editors)
+- Site wiring: every CMS getter falls back to src/content/site.ts — empty sections cannot ship; homepage Sunday gallery built behind SHOW_SUNDAY_PHOTOS flag
+- Backups: nightly GitHub Action → artifacts. Judgment: artifacts over /backups commits — inquiries are personal data and don't belong in git history; justified in the workflow header
+- Verified (research agent, official docs): Sanity free = 20 seats/10k docs/100GB ✓ covers us; scheduled publishing is Growth-only → manual Saturday ritual documented in the Studio guide
+- DEMO CONSTRAINT (honest): the full Drive-folder → Studio → site round trip cannot run without a Sanity account + Google service account (credentials only Shrey can create). Everything up to the credential is built and the path is documented step-by-step; listed in NEEDS SHREY.
+
+### Checkpoint — Phase 7 (was: gate 7)
+- Form pipeline: honeypot + 3s min-time + per-IP limit; Resend AND Brevo paths (verified: Resend can't mail third parties without a domain we don't own — Brevo's verified-single-sender works today); auto-ack in voice; Sanity CRM write; honest 503 → mailto fallback
+- track.js: 9 named events, no-ops without Umami env; ANALYTICS.md documents UTM convention + verified tiers (Umami Cloud Hobby 100k events/6-mo retention vs self-host on Neon — both fit with 30× headroom; Vercel Analytics custom events verified Pro-only → rejected as primary)
+- DEMO CONSTRAINT: live round-trip (submit → 2 emails + ack + Studio doc) needs the API keys; endpoint verified to degrade exactly as designed without them (form shows the mailto fallback).
+
+### Checkpoint — Phase 9 (was: gate 9)
+- Colophon system: footer stamp → /colophon generated from CHANGELOG.md at build (cannot drift); sunday.ics with weekly RRULE + quiet add-to-calendar; /privacy in voice + photography FAQ; DOMAIN_SETUP.md (Cloudflare Email Routing for hello@/partnerships@ → both Gmails); SITE_URL is the single domain switch
+- OG cards verified structurally for WhatsApp (1200×630, 65KB JPEG, og:image absolute + dimensions + alt); a real WhatsApp paste-test needs the preview URL — listed for the human pass
+
+### Checkpoint — Phase 5 / final QA (was: gate 5)
+- Lighthouse (lab, gzip): / 64→93 perf, 88→100 a11y; /brands 92→93, 92→100; BP 96→100, SEO 100; CLS 0, TBT 0ms both pages
+- The perf jump came from self-hosting the fonts (the audit's P1-10 said trim axes; measurement said the third-party CSS chain itself was the cost — went further than the audit asked, logged as a judgment call)
+- Reduced-motion: verified programmatically (no petal layers, instant stat values, settled arrival, untilted stamp; countdown keeps ticking — information, not motion)
+- 375px: zero horizontal overflow, zero page errors on all 5 routes
+- Safari engine (Playwright WebKit): both pages render, SVG turbulence filters included; bar edges differ sub-pixel from Chrome — acceptable, organic by design
+- Production deploy itself = the preview URL after push (Vercel builds the branch); listed in the report

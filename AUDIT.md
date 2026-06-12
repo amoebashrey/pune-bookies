@@ -204,3 +204,23 @@ Missing — all of it (this is the thinnest area of the site):
 2. **Samruddhi**: role + one-line bio?
 3. **`punebookies.com`**: do you own the domain / does `hello@` exist anywhere? (Determines whether P0-2 is a replacement or an alias note.)
 4. **Network links**: do Bombay/Bengaluru/Jaipur have Instagram handles to link, or remove the column for now?
+
+---
+
+# STATUS ADDENDUM — post-Banyan build (12 June 2026, branch overhaul/banyan)
+
+## P0 — all six fixed
+P0-1 years ✓ (a436f8f) · P0-2 emails ✓ (a436f8f) · P0-3 clean URLs + headers ✓ (6323ea2, revised for Astro in baf0145) · P0-4 OG/favicon/JSON-LD ✓ (a94917a) · P0-5 brands route + mobile overlap ✓ (a94917a, measured) · P0-6 countdown window ✓ (965406e)
+
+## P1 — 16 of 17 fixed
+P1-1 shared stylesheet ✓ · P1-2 navbar port ✓ · P1-3 bookmark filter ✓ · P1-4 contrast ✓ (and beyond: a11y 100) · P1-5 focus states ✓ · P1-6 stats honesty ✓ · P1-7 since-2024 phrasing ✓, founder credit resolved (Tanvi — owner's answer) · P1-8 Samruddhi ✓ · P1-9 dead links ✓ (cities unlinked per owner: no handles supplied) · P1-10 fonts ✓ (exceeded: self-hosted, render-blocking chain removed) · P1-11 countdown CLS ✓ (CLS 0 measured) · P1-12 image hygiene ✓ · P1-13 mailto obfuscation ✓ · P1-14 brands hero rag ✓ · P1-15 JSON-LD/robots/sitemap/canonicals ✓ · P1-16 timeline mobile column ✓ · P1-17 live-server removed ✓ (replaced by astro dev)
+
+## P2 — done
+emoji→SVG glyph · click-bleed skips controls · figure/blockquote stories · ol timeline · heading levels (now fully sequential, a11y 100) · lang en-IN · drop-cap filter on homepage · hanging punctuation + text-wrap balance · per-page shared defs hoisted
+
+## Consciously deferred
+- FAQ rule SVGs stay per-item (rejected <use>+inherited-dash: pixel-safety over DRY)
+- Cross-SVG filter refs remain (shared defs in same document — works everywhere tested incl. WebKit)
+- path-to-regexp advisory inside @astrojs/vercel (build-time only; "fix" is an adapter downgrade)
+- Real partnership numbers/dates/photos: placeholders clearly marked, awaiting owner data (NEEDS SHREY)
+- WhatsApp paste-test of OG cards: needs the preview URL in a real WhatsApp chat (2-minute human check)
