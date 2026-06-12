@@ -67,7 +67,7 @@ Sanity free: 20 seats / 10k docs / 100GB / 1M API + 5M CDN req — covers us; **
 4. **Sanity (1 hr, once):** follow `studio/STUDIO_SETUP.md` top to bottom (account → studio → service account → tokens → seed → invite Tanvi & Samruddhi → deploy hook). Then in Vercel env: `SANITY_PROJECT_ID`, `SANITY_WRITE_TOKEN`.
 5. **Email (15 min):** create a free **Brevo** account, verify one sender address, set `BREVO_API_KEY` in Vercel env. (Resend graduates us later — see DOMAIN_SETUP.md §4.)
 6. **Analytics (15 min):** pick Umami Cloud Hobby (fast) or self-host (ANALYTICS.md recipe); set the two `PUBLIC_UMAMI_*` env vars + add its origin to the CSP in vercel.json.
-7. **GitHub secrets (5 min):** `SANITY_PROJECT_ID` + read-only `SANITY_AUTH_TOKEN` for the nightly backup Action.
+7. **GitHub secrets (5 min):** `SANITY_PROJECT_ID` + read-only `SANITY_AUTH_TOKEN` for the nightly backup Action — and re-arm it: the push credential here lacked the `workflow` scope, so the Action file is parked. One command: `git mv studio/sanity-backup.workflow.yml .github/workflows/sanity-backup.yml`, commit, push (after `gh auth refresh -h github.com -s workflow` if pushing from this machine).
 8. **Domain, whenever:** DOMAIN_SETUP.md, top to bottom.
 9. **Ship:** merge the PR (or `git checkout main && git merge overhaul/banyan && git push`). Then push the tag: `git push origin v2.0.0` and create the GitHub Release with the CHANGELOG v2.0.0 section as its notes.
 

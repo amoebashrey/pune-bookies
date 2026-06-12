@@ -87,3 +87,7 @@
 - 375px: zero horizontal overflow, zero page errors on all 5 routes
 - Safari engine (Playwright WebKit): both pages render, SVG turbulence filters included; bar edges differ sub-pixel from Chrome — acceptable, organic by design
 - Production deploy itself = the preview URL after push (Vercel builds the branch); listed in the report
+
+### Push + preview
+- Branch pushed → Vercel preview builds from overhaul/banyan; production untouched; v2.0.0 tag created locally, NOT pushed (tags should point at what ships — push at merge)
+- Hit a real credential boundary: OAuth token lacks `workflow` scope → backup Action parked at studio/sanity-backup.workflow.yml with restore instructions in its header + REPORT NEEDS-SHREY §7. (Did not fake around it.)
