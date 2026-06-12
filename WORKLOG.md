@@ -55,3 +55,10 @@
 ### Checkpoint — Phase 3 (was: gate 3)
 - Reader jobs verified <10s: when (countdown stamp + tagline), where ('the spot drops Saturday, 4:05 PM — WhatsApp & Instagram' under the stamp), free (FAQ 'Yes. Always.' + hero), Instagram pathway above the fold
 - 375px verified by measurement: no overlap, tap targets ≥44px, no horizontal overflow, both pages render without console errors
+
+### Checkpoint — Phase 6 (was: gate 6)
+- Astro 6.4 static + @astrojs/vercel adapter; 3 routes build (/ , /brands, /404)
+- Pixel parity proven with pixelmatch on full-page captures: brands 0px diff at 1440 AND 375; home 0.007%/0.024% — verified to be only the live countdown minutes + random petal positions (diff pixels cluster at the stamp, y≈1400)
+- Judgment: footer moved outside <main> on the homepage (was inside) — landmark correctness, no visual delta (position:relative/z-2 unchanged); SharedDefs ships the union of both pages' filter defs (unused defs render nothing)
+- Judgment: npm cache had root-owned files (sudo unavailable) — used --cache /tmp/npm-cache rather than asking for credentials
+- Accepted risk: path-to-regexp ReDoS advisory in the Vercel adapter's build-time routing-utils; the 'fix' downgrades the adapter a major version. Build-time only, no user input touches it.
