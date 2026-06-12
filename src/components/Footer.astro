@@ -17,7 +17,7 @@ const enc = (s: string) => s.split('').map((c) => `&#${c.charCodeAt(0)};`).join(
     <div class="footer-grid">
 
       <div class="footer-col">
-        <h5>Get in touch</h5>
+        <h3>Get in touch</h3>
         <p>For partnerships, press, kind words, and complaints.</p>
         <p style="margin-top: 1rem;">
           {settings.contacts.map((c, i) => (
@@ -29,14 +29,14 @@ const enc = (s: string) => s.split('').map((c) => `&#${c.charCodeAt(0)};`).join(
       </div>
 
       <div class="footer-col">
-        <h5>Find us</h5>
+        <h3>Find us</h3>
         <a href={settings.igUrl} target="_blank" rel="noopener" data-track="ig_outbound">Instagram</a>
         <p class="net-city">{settings.whatsappNote}</p>
         <a href={middleLink.href}>{middleLink.label}</a>
       </div>
 
       <div class="footer-col">
-        <h5>The network</h5>
+        <h3>The network</h3>
         <p class="net-city">Bombay Bookies</p>
         <p class="net-city">Bengaluru Bookies</p>
         <p class="net-city">Jaipur Bookies</p>
