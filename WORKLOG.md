@@ -38,3 +38,20 @@
 - Baseline Lighthouse capture of the live site started (before numbers for the final report)
 - Free-tier verification research dispatched (Sanity / Resend / Neon / Umami / Vercel analytics) — findings will be reported in ANALYTICS.md + REPORT.md
 - Owner answers folded in: Tanvi is the founder (fix /brands credit); Samruddhi joins team as "content"; punebookies.com NOT owned — gmails stay live contacts, hello@ is dead and must be removed everywhere; sister-chapter IG handles not supplied → cities mentioned, nothing linked
+
+### Checkpoint — Phase 1 (was: gate 1)
+- All P0s fixed: years/founder/emails on /brands, vercel.json (cleanUrls fixes the /brands 404 + security headers + CSP), OG cards + favicon set + JSON-LD, 'For brands' nav+footer links, mobile bookmark/menu overlap (measured fix: toggle 64×44 ends x=327, bookmark starts x=331), countdown happening-now window
+- P1s fixed: shared styles.css extraction (~950 dup lines gone), navbar ported to /brands, bookmark filter restored, contrast tokens (ink-faint #6b5c47, gulmohar-text #a84634, nav 70%), :focus-visible, honest hero stats, dead links unlinked, mailto obfuscation (entity text + runtime assembly), font axes trimmed 300..900→400..600, countdown CLS (static reserved container), lazy images + real alts, semantic upgrades (ol timeline, figure/blockquote stories)
+- Judgment calls: kept per-item FAQ rule SVGs over <use>+inherited-dash trick (pixel-safety over DRY); relied on Vercel cleanUrls' built-in .html→clean 308 instead of an explicit redirect rule; baseline Lighthouse captured BEFORE changes: index 64/88/96/100, brands 92/92/96/100
+- Rejected: preloading Google-Fonts woff2 URLs directly (they're UA-dependent and rotate; kept preconnect + trimmed axes instead)
+
+### Checkpoint — Phase 2 (was: gate 2)
+- /brands rebuilt warm-first with evidence layer; all sections from the mission brief now exist (numbers/case studies/fit-list were missing — plan correction held)
+- BRANDS_STATS named constants in brands.js; placeholders marked in code AND with a visible dry-voice footnote so a preview reader can't mistake them for claims
+- Signature motion: ambient drift off on /brands, 3 parallax petals at numbers section only; heading rules draw 220ms once; quiet CTA at 60% with typing guard + session dismiss
+- Inquiry form markup + styles shipped now (degrades to mailto until the Phase 7 endpoint lands); media-kit.pdf generated (Chrome print-to-pdf, stamped 'draft — numbers pending')
+- Rejected: chart-library or precise-bar styling for audience data — hand-built SVG bars with feTurbulence edges per the register
+
+### Checkpoint — Phase 3 (was: gate 3)
+- Reader jobs verified <10s: when (countdown stamp + tagline), where ('the spot drops Saturday, 4:05 PM — WhatsApp & Instagram' under the stamp), free (FAQ 'Yes. Always.' + hero), Instagram pathway above the fold
+- 375px verified by measurement: no overlap, tap targets ≥44px, no horizontal overflow, both pages render without console errors
