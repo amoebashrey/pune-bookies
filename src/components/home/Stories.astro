@@ -1,0 +1,25 @@
+---
+import { stories } from '../../content/site';
+---
+<section class="stories" id="stories" tabindex="-1">
+  <div class="container">
+
+    <div class="section-head">
+      <span class="eyebrow">small notes</span>
+      <h2 class="display">Three <em>Sundays.</em></h2>
+    </div>
+
+    <div class="story-grid">
+      {stories.map((s) => (
+        <figure class="story">
+          <Fragment set:html={s.mark} />
+          <h3>{s.title}</h3>
+          <blockquote>
+            <p>{s.body}</p>
+          </blockquote>
+          <figcaption class="byline">{s.byline}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

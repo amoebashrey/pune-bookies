@@ -1,0 +1,13 @@
+---
+interface Props {
+  links: { href: string; label: string }[];
+}
+const { links } = Astro.props;
+---
+<header class="top">
+  <a href="/" class="mark"><span class="mk-pune">Pune</span><span class="mk-bookies">Bookies</span></a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">menu</button>
+  <nav class="nav-links" id="nav-links">
+    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+</header>

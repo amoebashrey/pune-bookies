@@ -1,0 +1,12 @@
+---
+import SectionHead from './SectionHead.astro';
+import { wontList } from '../../content/site';
+---
+<section class="brands-wont">
+  <div class="container">
+    <SectionHead eyebrow="so there are no surprises later" html="Things we <em>won't</em> do, even for the right brand." />
+    <ol class="wont-list">
+      {wontList.map((item) => <li>{item}</li>)}
+    </ol>
+  </div>
+</section>

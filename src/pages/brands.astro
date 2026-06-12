@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BrandsHero from '../components/brands/BrandsHero.astro';
+import BrandsManifesto from '../components/brands/BrandsManifesto.astro';
+import BrandsPress from '../components/brands/BrandsPress.astro';
+import BrandsNumbers from '../components/brands/BrandsNumbers.astro';
+import BrandsCases from '../components/brands/BrandsCases.astro';
+import BrandsFit from '../components/brands/BrandsFit.astro';
+import BrandsWont from '../components/brands/BrandsWont.astro';
+import BrandsMoney from '../components/brands/BrandsMoney.astro';
+import BrandsPeople from '../components/brands/BrandsPeople.astro';
+import BrandsTalk from '../components/brands/BrandsTalk.astro';
+import QuietCta from '../components/brands/QuietCta.astro';
+---
+<BaseLayout
+  title="Partner with us — Pune Bookies"
+  description="250 readers under a tree, every Sunday since 2024. A few honest notes for brands thinking about working with Pune Bookies."
+  ogDescription="250 readers under a tree, every Sunday since 2024. Penguin, Audible and Socials have joined us. A few honest notes for brands."
+  path="/brands"
+  ogImage="/og/brands.jpg"
+  ogImageAlt="A watercolour gulmohar tree on cream paper — Partner with Pune Bookies"
+  navLinks={[
+    { href: '/#manifesto', label: 'What this is' },
+    { href: '/#sundays', label: 'Sundays' },
+    { href: '#numbers', label: 'Numbers' },
+    { href: '#talk', label: 'Talk to us' },
+  ]}
+  bookmarkActive={true}
+  bodyAttrs={{ 'data-petals': 'off' }}
+  contactAnchor="#talk"
+  footerMiddleLink={{ href: '/', label: 'The Sundays' }}
+>
+  <BrandsHero />
+  <BrandsManifesto />
+  <BrandsPress />
+  <hr class="hairline" />
+  <BrandsNumbers />
+  <hr class="hairline" />
+  <BrandsCases />
+  <hr class="hairline" />
+  <BrandsFit />
+  <hr class="hairline" />
+  <BrandsWont />
+  <BrandsMoney />
+  <hr class="hairline" />
+  <BrandsPeople />
+  <hr class="hairline" />
+  <BrandsTalk />
+
+  <QuietCta slot="after-main" />
+
+  <script is:inline slot="tail">
+    // Subtle reveal-on-scroll (same behaviour as the homepage)
+    const reveals = document.querySelectorAll('section > .container, .stat, .case, .person');
+    reveals.forEach(el => el.classList.add('reveal'));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => obs.observe(el));
+    document.querySelectorAll('.stat, .case, .person').forEach((el, i) => { el.style.transitionDelay = ((i % 6) * 60) + 'ms'; });
+  </script>
+
+  <script is:inline slot="scripts" src="/brands.js" defer></script>
+</BaseLayout>

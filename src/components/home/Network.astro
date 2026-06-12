@@ -1,0 +1,28 @@
+---
+import { cities } from '../../content/site';
+---
+<section class="network">
+  <div class="container">
+
+    <div class="section-head">
+      <span class="eyebrow">sister chapters</span>
+      <h2 class="display">We're not <em>alone</em>.</h2>
+    </div>
+
+    <p class="network-intro">
+      Pune is one of four cities right now. The others run their own Sundays, their own way. Same name. Different trees.
+    </p>
+
+    <div class="network-grid">
+      {cities.map((c) => (
+        <div class:list={['chapter', { soon: c.soon }]}>
+          <svg class="chapter-mark" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <Fragment set:html={c.mark} />
+          </svg>
+          <h4>{c.name}</h4>
+          <p>{c.place}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

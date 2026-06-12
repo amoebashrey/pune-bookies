@@ -1,0 +1,50 @@
+---
+import SectionHead from './SectionHead.astro';
+import { brandStats } from '../../content/site';
+---
+<section class="brands-numbers" id="numbers" tabindex="-1">
+  <div class="petal-moment" aria-hidden="true"></div>
+  <div class="container">
+
+    <SectionHead eyebrow="the part you'll forward to your manager" html="By the <em>numbers.</em>" />
+
+    <!--
+      PLACEHOLDER VALUES — the named constants live in brands.js
+      (BRANDS_STATS). Fill with real Instagram-insights numbers,
+      then delete the visible footnote below.
+    -->
+    <div class="stats-grid">
+      {brandStats.map((s) => (
+        <div class="stat">
+          <span class="stat-num" data-stat={s.key}>{s.value}{s.unit && <span class="unit">{s.unit}</span>}</span>
+          <svg class="stat-underline" viewBox="0 0 96 9" preserveAspectRatio="none" aria-hidden="true"><rect x="2" y="3" width="92" height="3.5" fill="var(--gulmohar)" opacity="0.35" filter="url(#stat-edge)"/></svg>
+          <span class="stat-label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- audience shape — hand-built bars, organic edges -->
+    <div class="audience">
+      <div class="audience-row">
+        <div class="audience-label"><span>age — most of the audience</span><span class="val" data-stat="AUDIENCE_AGE_RANGE">18–34</span></div>
+      </div>
+      <div class="audience-row">
+        <div class="audience-label"><span>audience — women / men</span><span class="val" data-stat="AUDIENCE_GENDER_SPLIT">65 / 35</span></div>
+        <svg class="audience-bar" viewBox="0 0 640 16" preserveAspectRatio="none" aria-hidden="true">
+          <rect class="bar-a" x="0" y="3" width="416" height="10" fill="var(--gulmohar)" opacity="0.45" filter="url(#bar-edge)"/>
+          <rect class="bar-b" x="420" y="3" width="220" height="10" fill="var(--sage-soft)" opacity="0.5" filter="url(#bar-edge)"/>
+        </svg>
+      </div>
+      <div class="audience-row">
+        <div class="audience-label"><span>where they are — Pune / beyond</span><span class="val" data-stat="CITY_SPLIT">78 / 22</span></div>
+        <svg class="audience-bar" viewBox="0 0 640 16" preserveAspectRatio="none" aria-hidden="true">
+          <rect class="bar-a" x="0" y="3" width="499" height="10" fill="var(--gulmohar)" opacity="0.45" filter="url(#bar-edge)"/>
+          <rect class="bar-b" x="503" y="3" width="137" height="10" fill="var(--sage-soft)" opacity="0.5" filter="url(#bar-edge)"/>
+        </svg>
+      </div>
+    </div>
+
+    <p class="stats-note">— the engagement, reach and audience numbers are placeholders until our Instagram insights land here. The readers are real; come count them. —</p>
+
+  </div>
+</section>

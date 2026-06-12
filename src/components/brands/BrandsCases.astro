@@ -1,0 +1,24 @@
+---
+import SectionHead from './SectionHead.astro';
+import { brandCases } from '../../content/site';
+---
+<section class="brands-cases">
+  <div class="container">
+
+    <SectionHead eyebrow="we've done this before" html="Sundays <em>with</em> brands." />
+
+    <div class="case-grid">
+      {brandCases.map((c) => (
+        <article class="case">
+          <div class="case-photo">
+            <svg viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><rect x="0" y="0" width="400" height="300" fill="#ead9b9" filter="url(#bar-edge)" opacity="0.7"/></svg>
+            <span class="photo-soon">photo to come</span>
+          </div>
+          <h3>{c.title}</h3>
+          <span class="case-meta">{c.meta}</span>
+          <p>{c.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,50 @@
+---
+import { settings } from '../content/site';
+
+interface Props {
+  contactAnchor: string;                       // non-JS fallback href
+  middleLink: { href: string; label: string };
+}
+const { contactAnchor, middleLink } = Astro.props;
+
+// entity-encode addresses so plaintext never sits in the HTML
+const enc = (s: string) => s.split('').map((c) => `&#${c.charCodeAt(0)};`).join('');
+---
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-col">
+        <h5>Get in touch</h5>
+        <p>For partnerships, press, kind words, and complaints.</p>
+        <p style="margin-top: 1rem;">
+          {settings.contacts.map((c, i) => (
+            <Fragment>
+              {c.name} · <a class="obf-mail" data-u={c.user} data-d={c.domain} href={contactAnchor} set:html={enc(`${c.user}@${c.domain}`)} />{i < settings.contacts.length - 1 && <br />}
+            </Fragment>
+          ))}
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Find us</h5>
+        <a href={settings.igUrl} target="_blank" rel="noopener" data-track="ig_outbound">Instagram</a>
+        <p class="net-city">{settings.whatsappNote}</p>
+        <a href={middleLink.href}>{middleLink.label}</a>
+      </div>
+
+      <div class="footer-col">
+        <h5>The network</h5>
+        <p class="net-city">Bombay Bookies</p>
+        <p class="net-city">Bengaluru Bookies</p>
+        <p class="net-city">Jaipur Bookies</p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-mark">Pune <em>Bookies</em></div>
+      <div>{settings.footerTagline}</div>
+    </div>
+  </div>
+</footer>

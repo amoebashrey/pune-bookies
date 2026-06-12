@@ -1,0 +1,18 @@
+---
+import SectionHead from './SectionHead.astro';
+import { people } from '../../content/site';
+---
+<section class="brands-people">
+  <div class="container">
+    <SectionHead eyebrow="who you'd be dealing with" html="People <em>behind</em> it." />
+    <div class="people-row">
+      {people.map((p) => (
+        <div class="person">
+          <h3>{p.name}</h3>
+          <span class="role">{p.role}</span>
+          <p>{p.bio}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

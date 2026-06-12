@@ -1,0 +1,13 @@
+---
+import SectionHead from './SectionHead.astro';
+import { fitList } from '../../content/site';
+---
+<section class="brands-fit">
+  <div class="container">
+    <SectionHead eyebrow="a short list" html="Who we're a <em>fit</em> for." />
+    <ul class="fit-list">
+      {fitList.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="fit-postscript">Not on the list but sure you belong on the grass? Write anyway. The list has been wrong before.</p>
+  </div>
+</section>

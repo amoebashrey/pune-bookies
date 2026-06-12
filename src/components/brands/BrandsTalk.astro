@@ -1,0 +1,52 @@
+---
+import SectionHead from './SectionHead.astro';
+import { settings } from '../../content/site';
+
+const enc = (s: string) => s.split('').map((c) => `&#${c.charCodeAt(0)};`).join('');
+const shrey = settings.contacts.find((c) => c.name === 'Shrey')!;
+const tanvi = settings.contacts.find((c) => c.name === 'Tanvi')!;
+---
+<section class="brands-talk" id="talk" tabindex="-1">
+  <div class="container">
+    <SectionHead eyebrow="no pitch deck, just a paragraph" html="If you'd like to <em>talk.</em>" />
+
+    <div class="brands-narrow">
+      <p>We don't have a pitch deck. We have a tree, a Sunday, and an opinion about what belongs on it. Tell us what you're imagining — one paragraph is plenty. We read everything and reply to most of it.</p>
+    </div>
+
+    <form class="inquiry" id="inquiry-form" novalidate>
+      <div class="field">
+        <label for="inq-name">your name</label>
+        <input type="text" id="inq-name" name="name" autocomplete="name" required maxlength="120" />
+      </div>
+      <div class="field">
+        <label for="inq-brand">brand / organisation</label>
+        <input type="text" id="inq-brand" name="brand" autocomplete="organization" required maxlength="160" />
+      </div>
+      <div class="field">
+        <label for="inq-email">email</label>
+        <input type="email" id="inq-email" name="email" autocomplete="email" required maxlength="200" />
+      </div>
+      <div class="field">
+        <label for="inq-message">what are you imagining?</label>
+        <textarea id="inq-message" name="message" rows="4" required maxlength="4000" placeholder="a Sunday, roughly sketched"></textarea>
+      </div>
+      <!-- honeypot: humans never see it, bots can't resist it -->
+      <div class="field field-website" aria-hidden="true">
+        <label for="inq-website">website</label>
+        <input type="text" id="inq-website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="submit" class="inquiry-submit">send it over <span class="arrow">→</span></button>
+      <p class="inquiry-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="talk-alt">
+      Prefer email? Shrey ·
+      <a class="obf-mail" data-u={shrey.user} data-d={shrey.domain} href="#talk" set:html={enc(`${shrey.user}@${shrey.domain}`)} />
+      &nbsp;·&nbsp; Tanvi ·
+      <a class="obf-mail" data-u={tanvi.user} data-d={tanvi.domain} href="#talk" set:html={enc(`${tanvi.user}@${tanvi.domain}`)} />
+      <br />
+      Prefer this page as a PDF? <a href="/media-kit.pdf" data-track="media_kit_click">The media kit</a> has the same notes, printable.
+    </p>
+  </div>
+</section>

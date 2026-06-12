@@ -1,0 +1,18 @@
+---
+import { press } from '../../content/site';
+---
+<section class="brands-press">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">things people have written about us</span>
+    </div>
+    <p class="press-row">
+      {press.map((p, i) => (
+        <Fragment>
+          <span>{p.outlet}</span>
+          {i < press.length - 1 && <span class="press-dot" aria-hidden="true">·</span>}
+        </Fragment>
+      ))}
+    </p>
+  </div>
+</section>
