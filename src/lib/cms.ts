@@ -118,17 +118,17 @@ export async function getPress() {
 }
 
 /**
- * Notice strip (the bar above the navbar). Returns the Sanity singleton
- * when configured, else the hardcoded fallback — so the strip is never
- * empty. The visible line is derived from this by src/lib/noticeBar.ts.
+ * Homepage date stamp data. Returns the Sanity singleton when configured,
+ * else the hardcoded fallback — so the stamp is never empty. animations.js
+ * fills the stamp from these (date / time / override); location is never
+ * shown on the site.
  */
 export async function getNoticeBar() {
   const row = await groq<{
     nextSundayDate?: string;
     time?: string;
-    location?: string;
     overrideText?: string;
-  }>(`*[_type=="noticeBar"][0]{nextSundayDate, time, location, overrideText}`);
+  }>(`*[_type=="noticeBar"][0]{nextSundayDate, time, overrideText}`);
   return (row && row.nextSundayDate) ? row : fallbackNoticeBar;
 }
 

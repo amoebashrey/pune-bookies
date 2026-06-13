@@ -58,7 +58,7 @@ const COUNTDOWN = {
   WASH_BASE_FREQ: 0.02,         // feTurbulence baseFrequency for organic edges
   WASH_DISPLACE: 8,             // feDisplacementMap scale
   WASH_COLOR: '#c8553d',        // gulmohar
-  WHERE_LINE: 'the spot drops Saturday, 4:05 PM — WhatsApp & Instagram',
+  WHERE_LINE: 'Location shared in our WhatsApp groups',   // hardcoded, never from Sanity — we don't show the spot on the site
 };
 
 // ---- Smooth scroll (#4, Lenis) -----------------------------
@@ -320,6 +320,23 @@ const ATMOSPHERE = {
     const el = document.getElementById('next-sunday');
     if (!el) return;
 
+    // Sanity noticeBar rides in on data-attributes (CountdownStamp.astro):
+    // a specific date, a display time, or a full override line. All
+    // optional — blank values fall through to the auto-computed Sunday.
+    const ds          = el.dataset || {};
+    const overrideTxt = (ds.override || '').trim();
+    const fixedDate   = (ds.nextDate || '').trim();   // 'YYYY-MM-DD'
+    // gather hour parsed from a "8 AM" / "9 am" style string; default 8
+    let gatherHour = C.GATHER_HOUR;
+    const tm = /(\d{1,2})\s*(am|pm)?/i.exec(ds.time || '');
+    if (tm) {
+      let h = parseInt(tm[1], 10);
+      const ap = (tm[2] || '').toLowerCase();
+      if (ap === 'pm' && h < 12) h += 12;
+      if (ap === 'am' && h === 12) h = 0;
+      if (h >= 0 && h <= 23) gatherHour = h;
+    }
+
     el.innerHTML =
       `<svg class="ds-wash" viewBox="0 0 ${C.STAMP_W} ${C.STAMP_H}" aria-hidden="true">
          <defs>
@@ -344,28 +361,49 @@ const ATMOSPHERE = {
 
     const dateText  = el.querySelector('.ds-date-text');
     const countText = el.querySelector('.ds-count');
+    const whereEl   = el.querySelector('.ds-where');
     const plural = (n, word) => n + ' ' + word + (n === 1 ? '' : 's');
+
+    // Override wins: show just that line, no countdown, no where-line.
+    if (overrideTxt) {
+      dateText.textContent = overrideTxt;
+      countText.textContent = '';
+      if (whereEl) whereEl.style.display = 'none';
+      return;
+    }
 
     function tick() {
       // Shift into IST so getUTC* fields read as IST wall-clock.
       const ist = new Date(Date.now() + OFFSET_MS);
-      const day = ist.getUTCDay();          // 0 = Sunday
-      const hour = ist.getUTCHours();
 
-      let daysUntil = (7 - day) % 7;
-      let happeningNow = false;
-      if (daysUntil === 0) {
-        if (hour >= C.GATHER_HOUR && hour < C.ROLL_HOUR) {
-          happeningNow = true;                        // Sunday, 08:00–10:00 only
-        } else if (hour >= C.ROLL_HOUR) {
-          daysUntil = 7;                              // Sunday past 10:00 → next week
+      // A valid, not-yet-past CMS date is honoured; otherwise auto-compute
+      // the coming Sunday. Gather hour comes from the noticeBar time field.
+      let target = null, happeningNow = false;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fixedDate)) {
+        const [y, m, d] = fixedDate.split('-').map(Number);
+        const start = new Date(Date.UTC(y, m - 1, d, gatherHour, 0, 0, 0));
+        const rollEnd = new Date(Date.UTC(y, m - 1, d, C.ROLL_HOUR, 0, 0, 0));
+        if (ist.getTime() < rollEnd.getTime()) {
+          target = start;
+          happeningNow = ist.getTime() >= start.getTime();
         }
-        // Sunday before 08:00 → fall through: count down to this morning
       }
-
-      const target = new Date(ist);
-      target.setUTCDate(target.getUTCDate() + daysUntil);
-      target.setUTCHours(C.GATHER_HOUR, 0, 0, 0);
+      if (!target) {
+        const day = ist.getUTCDay();          // 0 = Sunday
+        const hour = ist.getUTCHours();
+        let daysUntil = (7 - day) % 7;
+        if (daysUntil === 0) {
+          if (hour >= gatherHour && hour < C.ROLL_HOUR) {
+            happeningNow = true;                      // Sunday, gather–10:00 only
+          } else if (hour >= C.ROLL_HOUR) {
+            daysUntil = 7;                            // Sunday past 10:00 → next week
+          }
+          // Sunday before gather hour → fall through: count down to this morning
+        }
+        target = new Date(ist);
+        target.setUTCDate(target.getUTCDate() + daysUntil);
+        target.setUTCHours(gatherHour, 0, 0, 0);
+      }
 
       // Build "Sunday, 15 June" from parts — guarantees the comma cross-browser.
       const p = dateFmt.formatToParts(target);

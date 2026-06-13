@@ -1,10 +1,11 @@
 ---
-// eyebrow + display heading (with gulmohar em) + 220ms underline draw
-interface Props { eyebrow: string; html: string; rule?: boolean; }
+// eyebrow + display heading (with gulmohar em) + 220ms underline draw.
+// eyebrow is optional — some headings stand on their own.
+interface Props { eyebrow?: string; html: string; rule?: boolean; }
 const { eyebrow, html, rule = true } = Astro.props;
 ---
 <div class="section-head">
-  <span class="eyebrow">{eyebrow}</span>
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
   <h2 class="display" set:html={html} />
   {rule && <svg class="h-rule" viewBox="0 0 88 7" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 4 Q 22 1.5 44 3.5 T 86 3" fill="none" stroke="var(--gulmohar)" stroke-width="1.6" stroke-linecap="round"/></svg>}
 </div>

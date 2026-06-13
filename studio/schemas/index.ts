@@ -261,16 +261,16 @@ const siteSettings = defineType({
 });
 
 /* ────────────────────────────────────────────────────────────────
-   noticeBar — SINGLETON. Drives the sticky strip above the navbar.
+   noticeBar — SINGLETON. Drives the date stamp on the homepage hero.
    The site renders a hardcoded fallback when this isn't set, so the
-   strip is never empty. The strip text is computed at request time
-   from these fields (see src/lib/noticeBar.ts).
+   stamp is never empty. We never show the location on the site —
+   that lives in the WhatsApp groups only.
    ──────────────────────────────────────────────────────────────── */
 const noticeBar = defineType({
   name: 'noticeBar',
   title: 'Notice strip',
   type: 'document',
-  description: 'The thin strip at the very top of every page. Set the next Sunday and the site writes the line for you. Changes appear ~2 minutes after you press Publish.',
+  description: 'Controls the date stamp on the homepage hero. Set nextSundayDate weekly. Time defaults to 8 AM and can be changed for special weeks. Use overrideText for a one-off line that replaces the whole stamp content.',
   fields: [
     defineField({
       name: 'nextSundayDate', title: 'Next Sunday date', type: 'date',
@@ -282,15 +282,11 @@ const noticeBar = defineType({
       description: 'When it starts. Default "8 AM".',
     }),
     defineField({
-      name: 'location', title: 'Location', type: 'string', initialValue: 'Mt. Carmel',
-      description: 'Where it is. Default "Mt. Carmel".',
-    }),
-    defineField({
       name: 'overrideText', title: 'Override line (optional)', type: 'text', rows: 2,
       description: 'If set, this exact line is shown verbatim, ignoring the date logic. Use for one-offs ("we\'re off this Sunday").',
     }),
   ],
-  preview: { prepare: () => ({ title: 'Notice strip', subtitle: 'the line at the top of every page' }) },
+  preview: { prepare: () => ({ title: 'Notice strip', subtitle: 'the homepage date stamp' }) },
 });
 
 /* ────────────────────────────────────────────────────────────────

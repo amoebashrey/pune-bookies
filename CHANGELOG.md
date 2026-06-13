@@ -18,25 +18,27 @@ All notable changes to the Pune Bookies site. Format follows [Keep a Changelog](
 
 ## [Unreleased]
 
+*Two polish rounds, reconciled to the net result. A notice strip was tried in round 1 and pulled in round 2 for fighting the brand — since it never shipped, it isn't logged here.*
+
 ### Added
-- A notice strip across the top of every page, with Sanity-backed dynamic copy: it reads "reading today / tomorrow / next Sunday" from the next-Sunday date, the time and the location, and can be overridden with a one-off line.
 - A "Write" link in the navbar (homepage and /brands), pointing straight at the inquiry form.
 - A "What we're open to" section on /brands — the kinds of partnerships that usually fit.
-- A longer silk-fabric partner ribbon with a gentle wind-breath.
 
 ### Changed
-- The hero ribbon is now a 40×280 silk variant — sheen, fold lines, a faint weave, a swallowtail end.
+- The homepage countdown stamp now takes its next-Sunday date, time and an optional one-off override line from the Studio (`noticeBar` singleton); its where-line reads "Location shared in our WhatsApp groups" — the actual spot is never shown on the site.
+- The partner ribbon is a longer 40×280 matte-fabric variant (no satin sheen), with a gentle wind-breath.
+- The homepage manifesto is plainer — two paragraphs, the "cathedral" line gone.
 - Homepage timeline bullets tightened for accuracy, with a "10:00 AM · We wrap up" step.
 - "Who shows up" now says families come too — parents, children, grandparents.
 - The "Curation" nav link is now "For Brands".
 - The inquiry form reads plainer: "Get in touch", a one-line lead, a "Message" field, an optional brand field, and a plain "Send".
-- The /brands intro and partnership framing rewritten around how we actually work with brands.
+- The /brands intro restored to the reading-community framing; "Things we won't do" replaced by "How we work with brands".
 
 ### Removed
-- The countdown stamp under the hero (the notice strip does its job now).
 - The "Where we read" specific locations from the homepage (they live in WhatsApp).
+- The "Who we're a fit for" section on /brands (redundant with "What we're open to").
 - The "Where the money goes" section on /brands.
-- The defensive "Things we won't do" framing, replaced by "How we work with brands".
+- The "the part you'll forward to your manager" eyebrow on the Numbers section.
 
 ## [2.0.0] Banyan — June 2026
 

@@ -29,14 +29,12 @@ export const settings = {
   whatsappNote: 'WhatsApp — the link lives in the Instagram bio',
 };
 
-// Notice strip (the thin bar above the navbar). Sanity's noticeBar
-// singleton overrides this at build; this fallback keeps the strip from
-// ever rendering empty. The visible line is computed from these fields
-// at request time — see src/lib/noticeBar.ts.
+// Homepage date stamp. Sanity's noticeBar singleton overrides this at
+// build; this fallback keeps the stamp from ever rendering empty.
+// Location is deliberately absent — it lives in the WhatsApp groups only.
 export const noticeBar = {
   nextSundayDate: '2026-06-14',
   time: '8 AM',
-  location: 'Mt. Carmel',
   overrideText: '',
 };
 
@@ -131,14 +129,6 @@ export const people = [
   { name: 'Shrey', role: 'partnerships, operations & community', bio: "The person you'll most likely be writing to. Keeps the Sundays running and the conversations honest." },
   { name: 'Samruddhi', role: 'content', bio: 'Photos, videos, reels — the reason 43,900 people watch our Sundays from somewhere else.' },
   { name: '+ everyone who shows up', role: 'the actual community', bio: 'Two hundred and fifty people deciding to read together every Sunday is what Pune Bookies actually is.' },
-];
-
-export const fitList = [
-  'Books, publishing, and the people who sell them',
-  'Audio — audiobooks, podcasts, things for ears',
-  'Coffee, chai, and breakfast-shaped food',
-  'Stationery, paper, pens that people get attached to',
-  'Lifestyle brands with a reading soul, not a reading campaign',
 ];
 
 export const openList = [

@@ -106,3 +106,19 @@
 - **/brands copy**: intro rewritten ("For brands", Audible/Penguin/Third Wave/Crossword/Socials, free-and-stays-free); "Things we won't do" replaced by "How we work with brands" (4 paragraphs); added "What we're open to"; removed "Where the money goes"; case-study placeholders and the stats row left untouched.
 - Hardcoded fallback intact and tested: built with and without `SANITY_*` env — the notice strip and every CMS getter fall back cleanly, the site never builds empty.
 - `npm run build` green after every step; PR opened against main.
+
+---
+
+## 2026-06-13 — Session 3: Banyan revisions round 2 (branch `polish/banyan-revisions-2`)
+Polish-on-polish, branched off `polish/banyan-revisions`. Eleven changes; build green after each.
+- **Notice strip out, countdown stamp back.** The sticky red strip fought the brand — removed it everywhere (`NoticeBar.astro` deleted, dropped from `BaseLayout`, `.notice-bar` CSS and the navbar 48/44px top-offset reverted; kept the 72px right-padding since the ribbon stays). Restored `CountdownStamp.astro` under `<Hero />`, but now fed by Sanity: it carries `noticeBar` (date / time / override) on data-attributes and `animations.js` reads them. Deleted the now-orphaned `src/lib/noticeBar.ts`.
+- **`noticeBar` schema simplified.** Removed the `location` field (we never show the spot on the site) from the schema, the `site.ts` fallback, and the `getNoticeBar` GROQ/type. Document description rewritten to describe the hero stamp.
+- **Countdown render logic (`animations.js`).** `WHERE_LINE` is now the hardcoded `"Location shared in our WhatsApp groups"` (never from Sanity). If `overrideText` is set the stamp shows only that line (no countdown, no where-line); otherwise it shows date + countdown + the where-line, with the gather hour parsed from the `time` field (default 8 AM) and an optional fixed date from `nextSundayDate`.
+- **Ribbon: matte, not satin.** Dropped the bright sheen stop; gradient is now a subtle dim (#A8392A → #B73E2D → #9A3022). Fold lines dimmed (0.03 / 0.04 / 0.02), top-darkening reduced (0.25). Kept the weave, swallowtail, 40×280 size, 6s wind-breath, cream label.
+- **Homepage manifesto** rewritten to two plain paragraphs; "cathedral", "we don't run ads", and "stubborn about the small things" all gone.
+- **/brands intro** restored to the reading-community framing (three paragraphs, eyebrow "a few honest notes"); removed the previous round's "free and stays free / doesn't pay to attend, ever" framing.
+- **Removed "Who we're a fit for"** (`BrandsFit.astro` + `fitList`) as redundant with "What we're open to"; collapsed the doubled hairline rule.
+- **Numbers eyebrow** ("the part you'll forward to your manager") removed; made `SectionHead`'s eyebrow optional so the heading stands alone.
+- **Form lead** trimmed to one sentence ("Tell us what you have in mind."). **Arrogance sweep**: deleted "That's how we keep it honest." from the closing "How we work with brands" paragraph.
+- CHANGELOG `[Unreleased]` **reconciled** rather than appended — the strip was added in round 1 and removed in round 2, so it never shipped and isn't logged; the section now reads as the net result of both rounds.
+- Lighthouse (desktop, lab) re-run: perf 100/99, a11y 100, BP 100, SEO 100 — gates held. PR opened against main.

@@ -1,0 +1,17 @@
+---
+// Library date stamp — the container is static so its space is
+// reserved before JS runs (zero layout shift); animations.js fills it.
+//
+// Sanity's noticeBar (date / time / override) rides in on data-attributes;
+// animations.js reads them. Empty values → animations.js auto-computes the
+// coming Sunday, exactly as before. The location is never shown here.
+import { getNoticeBar } from '../lib/cms';
+const notice = await getNoticeBar();
+---
+<div
+  id="next-sunday"
+  aria-live="off"
+  data-next-date={notice.nextSundayDate ?? ''}
+  data-time={notice.time ?? ''}
+  data-override={notice.overrideText ?? ''}
+></div>

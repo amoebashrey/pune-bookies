@@ -5,7 +5,6 @@
  * Page content goes in the default slot; page-specific inline
  * scripts go in slot="tail".
  */
-import NoticeBar from '../components/NoticeBar.astro';
 import Navbar from '../components/Navbar.astro';
 import Bookmark from '../components/Bookmark.astro';
 import SharedDefs from '../components/SharedDefs.astro';
@@ -119,7 +118,6 @@ const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 
 <body {...bodyAttrs}>
 
-<NoticeBar />
 <Navbar links={navLinks} />
 <Bookmark active={bookmarkActive} />
 <SharedDefs />
