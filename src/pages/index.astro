@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import CountdownStamp from '../components/CountdownStamp.astro';
+import Manifesto from '../components/home/Manifesto.astro';
+import Timeline from '../components/home/Timeline.astro';
+import Photos from '../components/home/Photos.astro';
+import Stories from '../components/home/Stories.astro';
+import Faq from '../components/home/Faq.astro';
+import Network from '../components/home/Network.astro';
+import Come from '../components/home/Come.astro';
+
+const SITE = (Astro.site ?? new URL('https://pune-bookies.vercel.app')).origin;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE}/#org`,
+      name: 'Pune Bookies',
+      url: `${SITE}/`,
+      logo: `${SITE}/apple-touch-icon.png`,
+      foundingDate: '2024',
+      description: 'A reading community in Pune, India. A few hundred readers under a tree, every Sunday morning.',
+      sameAs: ['https://instagram.com/pune_bookies'],
+    },
+    {
+      '@type': 'Event',
+      name: 'Pune Bookies — Sunday reading under a tree',
+      description: 'Two hours of silent reading in a park in Pune. Bring a book. Free, no RSVP. The location is shared every Saturday at 4:05 PM on WhatsApp and Instagram.',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      eventSchedule: {
+        '@type': 'Schedule',
+        repeatFrequency: 'P1W',
+        byDay: 'https://schema.org/Sunday',
+        startTime: '08:00:00',
+        endTime: '10:00:00',
+        scheduleTimezone: 'Asia/Kolkata',
+      },
+      location: {
+        '@type': 'Place',
+        name: 'A park in Pune — announced every Saturday',
+        address: { '@type': 'PostalAddress', addressLocality: 'Pune', addressCountry: 'IN' },
+      },
+      isAccessibleForFree: true,
+      organizer: { '@id': `${SITE}/#org` },
+    },
+  ],
+};
+---
+<BaseLayout
+  title="Pune Bookies — A reading community"
+  description="We read together. Every Sunday, 8 to 10 in the morning, under a tree somewhere in Pune."
+  ogDescription="We read together. Every Sunday, 8 to 10 in the morning, under a tree somewhere in Pune. Free, always."
+  path="/"
+  ogImage="/og/home.jpg"
+  navLinks={[
+    { href: '#manifesto', label: 'Manifesto' },
+    { href: '#sundays', label: 'Sundays' },
+    { href: '#stories', label: 'Stories' },
+    { href: '/brands', label: 'For brands' },
+  ]}
+  contactAnchor="#contact"
+  footerMiddleLink={{ href: '/brands', label: 'For brands' }}
+  jsonLd={jsonLd}
+>
+  <Hero />
+  <CountdownStamp />
+  <Manifesto />
+  <Timeline />
+  <Photos />
+  <Stories />
+  <Faq />
+  <Network />
+  <Come />
+
+  <script is:inline slot="tail">
+    // Subtle reveal-on-scroll
+    const reveals = document.querySelectorAll('section > .container, section > .hero-inner, .timeline-row, .story, .chapter, .step, .faq-item, .photo-tile');
+    reveals.forEach(el => el.classList.add('reveal'));
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => obs.observe(el));
+
+    // Stagger timeline + stories
+    document.querySelectorAll('.timeline-row, .story, .chapter, .step, .faq-item').forEach((el, i) => {
+      el.style.transitionDelay = (i * 60) + 'ms';
+    });
+  </script>
+</BaseLayout>

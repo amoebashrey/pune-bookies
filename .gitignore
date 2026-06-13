@@ -1,3 +1,11 @@
 node_modules/
 .DS_Store
 *.log
+dist/
+.vercel/
+.astro/
+.env
+studio/.env
+studio/node_modules/
+studio/dist/
+studio/google-service-account.json

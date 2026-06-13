@@ -46,20 +46,19 @@ const PETALS = {
 };
 
 // ---- Next-Sunday countdown / library date stamp (#3) -------
+// Layout/visual CSS lives in styles.css (#next-sunday); the SVG
+// wash geometry stays here because this module builds the SVG.
 const COUNTDOWN = {
   IST_OFFSET_MIN: 5 * 60 + 30,  // IST is UTC+5:30
   GATHER_HOUR: 8,               // Sunday gathering starts 08:00 IST
   ROLL_HOUR: 10,                // "happening now" holds until 10:00 IST, then rolls forward
   TICK_MS: 1000,                // recompute every second
-  // — library date-stamp styling —
   STAMP_W: 220,                 // px — watercolour wash width
   STAMP_H: 120,                 // px — watercolour wash height
-  ROTATION: 0.5,                // deg clockwise — the stamp sits very slightly askew
-  WASH_OPACITY: 0.10,           // cream paper reads through the gulmohar wash
   WASH_BASE_FREQ: 0.02,         // feTurbulence baseFrequency for organic edges
   WASH_DISPLACE: 8,             // feDisplacementMap scale
   WASH_COLOR: '#c8553d',        // gulmohar
-  PETAL_SIZE: 12,               // px — printer's-flourish petal by the date line
+  WHERE_LINE: 'the spot drops Saturday, 4:05 PM — WhatsApp & Instagram',
 };
 
 // ---- Smooth scroll (#4, Lenis) -----------------------------
@@ -204,6 +203,10 @@ const ATMOSPHERE = {
   if (window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  // Pages can opt out of the ambient drift (e.g. /brands keeps its
+  // petals for one signature moment only): <body data-petals="off">
+  if (document.body && document.body.dataset.petals === 'off') return;
+
   const rand = (a, b) => a + Math.random() * (b - a);
   const pick = (arr) => arr[(Math.random() * arr.length) | 0];
   const petalSVG = (color) =>
@@ -311,61 +314,12 @@ const ATMOSPHERE = {
     weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC'
   });
 
-  function injectCSS() {
-    const css = `
-      #next-sunday {
-        position: relative; z-index: 2;
-        width: max-content; max-width: 90vw;
-        margin: 4rem auto; padding-block: 3rem;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        text-align: center; transform: rotate(${C.ROTATION}deg);
-      }
-      #next-sunday .ds-wash {
-        position: absolute; top: 50%; left: 50%;
-        width: ${C.STAMP_W}px; height: ${C.STAMP_H}px;
-        transform: translate(-50%, -50%);
-        opacity: ${C.WASH_OPACITY}; overflow: visible; pointer-events: none; z-index: 0;
-      }
-      #next-sunday .ds-inner { position: relative; z-index: 1; }
-      #next-sunday .ds-eyebrow {
-        font-family: 'Lora', serif; font-variant: small-caps;
-        letter-spacing: 0.15em; font-size: 0.7rem;
-        color: rgba(31, 22, 17, 0.6);
-      }
-      #next-sunday .ds-date {
-        position: relative;
-        font-family: 'Fraunces', serif; font-style: italic;
-        font-variation-settings: "SOFT" 100, "opsz" 28;
-        font-size: 1.5rem; color: var(--ink);
-        margin: 0.4rem 0 0.45rem;
-      }
-      #next-sunday .ds-petal {
-        position: absolute; width: ${C.PETAL_SIZE}px; height: ${C.PETAL_SIZE * 1.4}px;
-        left: -16px; top: -9px; transform: rotate(-18deg);
-      }
-      #next-sunday .ds-count {
-        font-family: 'Lora', serif; font-style: italic;
-        font-size: 0.9rem; color: var(--ink-soft);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        #next-sunday { transform: none; }   /* no askew tilt; countdown still ticks */
-      }
-    `;
-    const style = document.createElement('style');
-    style.id = 'pb-countdown';
-    style.textContent = css;
-    document.head.appendChild(style);
-  }
-
   function build() {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;   // homepage only
+    // The container is static HTML (space pre-reserved → no layout
+    // shift); this module only fills it. Homepage only.
+    const el = document.getElementById('next-sunday');
+    if (!el) return;
 
-    injectCSS();
-
-    const el = document.createElement('div');
-    el.id = 'next-sunday';
-    el.setAttribute('aria-live', 'off');
     el.innerHTML =
       `<svg class="ds-wash" viewBox="0 0 ${C.STAMP_W} ${C.STAMP_H}" aria-hidden="true">
          <defs>
@@ -384,8 +338,9 @@ const ATMOSPHERE = {
            <span class="ds-date-text"></span>
          </div>
          <div class="ds-count"></div>
+         <div class="ds-where">${C.WHERE_LINE}</div>
+         <a class="ds-cal" href="/sunday.ics" data-track="calendar_add">add to calendar</a>
        </div>`;
-    hero.insertAdjacentElement('afterend', el);
 
     const dateText  = el.querySelector('.ds-date-text');
     const countText = el.querySelector('.ds-count');
@@ -400,8 +355,12 @@ const ATMOSPHERE = {
       let daysUntil = (7 - day) % 7;
       let happeningNow = false;
       if (daysUntil === 0) {
-        if (hour < C.ROLL_HOUR) happeningNow = true;  // Sunday before 10:00
-        else daysUntil = 7;                           // Sunday past 10:00 → next week
+        if (hour >= C.GATHER_HOUR && hour < C.ROLL_HOUR) {
+          happeningNow = true;                        // Sunday, 08:00–10:00 only
+        } else if (hour >= C.ROLL_HOUR) {
+          daysUntil = 7;                              // Sunday past 10:00 → next week
+        }
+        // Sunday before 08:00 → fall through: count down to this morning
       }
 
       const target = new Date(ist);
@@ -463,6 +422,8 @@ const ATMOSPHERE = {
     if (!target) return;
     e.preventDefault();
     lenis.scrollTo(target, { offset: 0 });
+    // keyboard/SR users should land where the page scrolled
+    if (typeof target.focus === 'function') target.focus({ preventScroll: true });
   });
 })();
 
@@ -532,6 +493,8 @@ const ATMOSPHERE = {
   // --- 3d: click-bleed watercolour bloom (skipped under reduced-motion) ---
   if (!reduce) {
     document.addEventListener('click', (e) => {
+      // bleed belongs to the paper, not to the controls
+      if (e.target.closest && e.target.closest('a, button, input, textarea, select, label, summary')) return;
       const drop = document.createElement('span');
       drop.setAttribute('aria-hidden', 'true');
       drop.style.cssText =
@@ -552,6 +515,23 @@ const ATMOSPHERE = {
       anim.addEventListener('finish', () => drop.remove());
     }, { passive: true });
   }
+})();
+
+
+/* ============================================================
+   CONTACT — assemble mailto: links at runtime so plaintext
+   addresses never sit in the HTML for scrapers. The visible
+   text is entity-encoded in the markup (renders normally);
+   this swaps the dead href for the real one.
+   ============================================================ */
+(function () {
+  function arm() {
+    document.querySelectorAll('a.obf-mail[data-u][data-d]').forEach((a) => {
+      a.setAttribute('href', 'mailto:' + a.dataset.u + '@' + a.dataset.d);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arm);
+  else arm();
 })();
 
 

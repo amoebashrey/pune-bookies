@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Privacy — Pune Bookies"
+  description="What we count, what the inquiry form stores, and what we'll never do with either."
+  path="/privacy"
+  navLinks={[
+    { href: '/#manifesto', label: 'Manifesto' },
+    { href: '/#sundays', label: 'Sundays' },
+    { href: '/brands', label: 'For brands' },
+  ]}
+>
+  <section class="privacy">
+    <div class="container">
+      <div class="prose-column">
+        <div class="manifesto-eyebrow"><span class="eyebrow">the small print, kept small</span></div>
+        <h1 class="display">What we know <em>about you.</em></h1>
+
+        <p>Honestly, not much. Here's the complete list.</p>
+
+        <h2>What we count</h2>
+        <p>
+          We count visits the way a shopkeeper counts footfall — anonymously, in aggregate,
+          using self-hosted analytics (Umami) that sets no cookies and builds no profiles.
+          We can see that <em>someone</em> read the brands page; we cannot see that <em>you</em> did.
+          No consent banner because there's nothing to consent to.
+        </p>
+
+        <h2>The inquiry form</h2>
+        <p>
+          If you write to us through the partnerships form, we store what you typed —
+          your name, brand, email, and message — in our content system, where Tanvi and
+          Shrey (and nobody else) read it and reply. It stays there as our record of the
+          conversation. Want it gone? Email us and it's gone.
+        </p>
+
+        <h2>What we don't do</h2>
+        <ul>
+          <li>No advertising trackers, no pixels, no fingerprinting.</li>
+          <li>No selling, sharing, or "partnering" with anyone about your data.</li>
+          <li>No newsletter you didn't ask for. (No newsletter at all, currently.)</li>
+        </ul>
+
+        <h2>Photos at Sundays</h2>
+        <p>
+          We photograph Sundays for Instagram and this site. The group photo at 9:50 is
+          opt-in by walking into it — step aside and nobody minds, no explanation needed.
+          If a photo of you is up somewhere and you'd rather it weren't, message
+          @pune_bookies and it comes down. No forms, no fuss.
+        </p>
+
+        <h2>Questions, removals, complaints</h2>
+        <p>
+          Tanvi · tanvi.lele3944@gmail.com<br />
+          Shrey · shreyasjadhav531@gmail.com
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

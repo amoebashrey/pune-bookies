@@ -1,0 +1,62 @@
+---
+/**
+ * /colophon — the release history in human language.
+ * Generated from CHANGELOG.md at build time so it can never drift:
+ * each release's `> colophon:` line is the sentence shown here.
+ */
+import { readFileSync } from 'node:fs';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const ORDINALS = ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
+
+// page is prerendered — the file is read once at build time, from the repo root
+const changelog = readFileSync(`${process.cwd()}/CHANGELOG.md`, 'utf8');
+const releases: { edition: string; tree: string; when: string; line: string }[] = [];
+const re = /^## \[(\d+)\.(\d+)\.(\d+)\] (\S+) — (.+)$/gm;
+let m: RegExpExecArray | null;
+while ((m = re.exec(changelog))) {
+  const tail = changelog.slice(m.index);
+  const col = tail.match(/^> colophon: (.+)$/m);
+  releases.push({
+    edition: ORDINALS[parseInt(m[1], 10)] ?? `${m[1]}th`,
+    tree: m[4],
+    when: m[5],
+    line: col ? col[1] : '',
+  });
+}
+---
+<BaseLayout
+  title="Colophon — Pune Bookies"
+  description="The editions of this site, named after trees we'd read under."
+  path="/colophon"
+  navLinks={[
+    { href: '/#manifesto', label: 'Manifesto' },
+    { href: '/#sundays', label: 'Sundays' },
+    { href: '/brands', label: 'For brands' },
+  ]}
+>
+  <section class="colophon">
+    <div class="container">
+      <div class="prose-column">
+        <div class="manifesto-eyebrow"><span class="eyebrow">colophon</span></div>
+        <h1 class="display colophon-title">Editions of <em>this site.</em></h1>
+        <p class="colophon-intro">
+          Like any book that gets reprinted, this site has editions. Each one is named
+          after a tree we'd happily read under. What changed, in plain words:
+        </p>
+
+        {releases.map((r) => (
+          <div class="colophon-entry">
+            <h2 class="colophon-edition serif-italic">{r.tree}, {r.when} <span class="colophon-ord">— the {r.edition} edition</span></h2>
+            <p>{r.line}</p>
+          </div>
+        ))}
+
+        <p class="colophon-foot">
+          Set in Fraunces and Lora, on paper-coloured pixels. Built by hand. The full
+          ledger of changes lives in the repository, for those who like footnotes.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

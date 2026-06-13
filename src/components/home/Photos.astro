@@ -1,0 +1,47 @@
+---
+// Real Sunday photos arrive via the Drive→Sanity pipeline behind the
+// SHOW_SUNDAY_PHOTOS=true flag; until then, admitted placeholders.
+import { getSundayPhotos } from '../../lib/cms';
+const sundayPhotos = await getSundayPhotos();   // null until flag + photos exist
+
+const tiles = [
+  { cls: 't1', src: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&q=80', alt: 'Placeholder: shelves of books in warm light', w: 900, h: 1125, cap: 'Empress Botanical Garden · March 2026' },
+  { cls: 't2', src: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=700&q=80', alt: 'Placeholder: an open book resting on grass', w: 700, h: 875, cap: "A regular's spot · February 2026" },
+  { cls: 't3', src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80', alt: 'Placeholder: a reader outdoors with a book', w: 600, h: 800, cap: 'Sambhaji Park · April 2026' },
+  { cls: 't4', src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=700&q=80', alt: 'Placeholder: an open book, pages catching the light', w: 700, h: 875, cap: 'A reader, unnamed · January 2026' },
+  { cls: 't5', src: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=900&q=80', alt: 'Placeholder: a person reading quietly', w: 900, h: 720, cap: 'The morning the geese came · November 2024' },
+  { cls: 't6', src: 'https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=80', alt: 'Placeholder: a tree canopy from below', w: 600, h: 800, cap: 'Under the rain tree · December 2024' },
+];
+---
+<section class="atmosphere">
+  <div class="container">
+
+    <div class="section-head">
+      <span class="eyebrow">what it looks like</span>
+      <h2 class="display">A year of <em>Sundays</em>.</h2>
+    </div>
+
+    {sundayPhotos ? (
+      <div class="photo-grid">
+        {sundayPhotos.map((p, i) => (
+          <figure class:list={['photo-tile', ['t1', 't2', 't4', 't5'][i] ?? 't1']}>
+            <img src={p.url} alt={p.alt} width="900" height="1125" loading="lazy" decoding="async" />
+            {p.cap && <figcaption class="photo-caption">{p.cap}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <div class="photo-grid">
+        {tiles.map((t) => (
+          <figure class:list={['photo-tile', t.cls]}>
+            <img src={t.src} alt={t.alt} width={t.w} height={t.h} loading="lazy" decoding="async" />
+            <figcaption class="photo-caption">{t.cap}</figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+
+    {!sundayPhotos && <p class="photo-note">— our team has shot a year of Sundays. these are placeholders —</p>}
+
+  </div>
+</section>

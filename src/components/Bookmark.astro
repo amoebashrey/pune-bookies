@@ -1,0 +1,23 @@
+---
+interface Props { active?: boolean; }
+const { active = false } = Astro.props;
+---
+<!-- Partner bookmark — gulmohar ribbon folded over the right edge -->
+<a
+  href="/brands"
+  class:list={['bookmark', { 'is-active': active }]}
+  aria-label="Partner with us"
+  aria-current={active ? 'page' : undefined}
+  data-track="bookmark_click"
+>
+  <svg class="bookmark-shape" viewBox="0 0 14 120" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <filter id="bookmark-edge" x="-60%" y="-8%" width="220%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.06 0.12" numOctaves="2" seed="6" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3"/>
+      </filter>
+    </defs>
+    <rect x="2" y="0" width="10" height="120" filter="url(#bookmark-edge)"/>
+  </svg>
+  <span class="bookmark-text">Partner with us</span>
+</a>

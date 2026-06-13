@@ -1,0 +1,145 @@
+---
+/**
+ * BaseLayout — head (meta/OG/icons/fonts), arrival gate, navbar,
+ * bookmark, shared SVG defs, footer, shared motion scripts.
+ * Page content goes in the default slot; page-specific inline
+ * scripts go in slot="tail".
+ */
+import Navbar from '../components/Navbar.astro';
+import Bookmark from '../components/Bookmark.astro';
+import SharedDefs from '../components/SharedDefs.astro';
+import Footer from '../components/Footer.astro';
+
+interface NavLink { href: string; label: string; }
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;                    // '/', '/brands' — canonical path
+  ogImage?: string;                // path under site root
+  ogImageAlt?: string;
+  ogDescription?: string;
+  navLinks: NavLink[];
+  bookmarkActive?: boolean;
+  bodyAttrs?: Record<string, string>;
+  contactAnchor?: string;          // non-JS fallback href for obfuscated mails
+  footerMiddleLink?: NavLink;
+  jsonLd?: object | null;
+}
+
+const {
+  title, description, path,
+  ogImage = '/og/home.jpg',
+  ogImageAlt = 'A watercolour gulmohar tree on cream paper — Pune Bookies',
+  ogDescription = description,
+  navLinks,
+  bookmarkActive = false,
+  bodyAttrs = {},
+  contactAnchor = '#contact',
+  footerMiddleLink = { href: '/brands', label: 'For brands' },
+  jsonLd = null,
+} = Astro.props;
+
+const SITE = (Astro.site ?? new URL('https://pune-bookies.vercel.app')).origin;
+const canonical = SITE + (path === '/' ? '/' : path);
+const ogImageAbs = SITE + ogImage;
+
+// Umami (privacy-respecting counting, no cookies) — only renders when
+// configured. PUBLIC_ on purpose: the website id is not a secret.
+const UMAMI_SRC = import.meta.env.PUBLIC_UMAMI_SRC;
+const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
+---
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+<meta name="description" content={description} />
+
+<link rel="canonical" href={canonical} />
+<meta name="theme-color" content="#f4ecd8" />
+
+<!-- Open Graph / WhatsApp / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Pune Bookies" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={ogDescription} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageAbs} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={ogImageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={ogDescription} />
+<meta name="twitter:image" content={ogImageAbs} />
+
+<!-- Icons -->
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<!-- self-hosted fonts (see styles.css @font-face) — preload the two critical files -->
+<link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/lora.woff2" as="font" type="font/woff2" crossorigin />
+
+<link rel="stylesheet" href="/styles.css" />
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+<script is:inline>
+  /* Arrival gate — runs before paint so the hero never flashes.
+     First visit in a session → run the bloom. Repeat visit or
+     reduced-motion → settled state, no animation. */
+  (function (d) {
+    var KEY = 'pb_arrival_seen';
+    var reduce = window.matchMedia &&
+                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen;
+    try { seen = sessionStorage.getItem(KEY); } catch (e) { seen = '1'; }
+
+    if (seen || reduce) {
+      d.documentElement.setAttribute('data-arrival', 'done');
+    } else {
+      d.documentElement.setAttribute('data-arrival', 'running');
+      /* Failsafe: never leave the hero hidden if animations.js fails. */
+      setTimeout(function () {
+        if (d.documentElement.getAttribute('data-arrival') === 'running') {
+          d.documentElement.setAttribute('data-arrival', 'done');
+        }
+      }, 6000);
+    }
+  })(document);
+</script>
+
+<slot name="head" />
+</head>
+
+<body {...bodyAttrs}>
+
+<Navbar links={navLinks} />
+<Bookmark active={bookmarkActive} />
+<SharedDefs />
+
+<main id="top">
+  <slot />
+</main>
+
+<slot name="after-main" />
+
+<Footer contactAnchor={contactAnchor} middleLink={footerMiddleLink} />
+
+<slot name="tail" />
+
+<!-- Motion layer -->
+<script is:inline src="/lenis.min.js" defer></script>
+<script is:inline src="/animations.js" defer></script>
+
+<!-- Measurement — we don't track people, we count visits -->
+{UMAMI_SRC && UMAMI_ID && <script is:inline defer src={UMAMI_SRC} data-website-id={UMAMI_ID}></script>}
+<script is:inline src="/track.js" defer></script>
+<slot name="scripts" />
+
+</body>
+</html>

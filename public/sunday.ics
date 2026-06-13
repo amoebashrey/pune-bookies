@@ -1,0 +1,26 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Pune Bookies//Sunday Reading//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:Asia/Kolkata
+BEGIN:STANDARD
+DTSTART:19450101T000000
+TZOFFSETFROM:+0530
+TZOFFSETTO:+0530
+TZNAME:IST
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:sunday-reading@pune-bookies.vercel.app
+DTSTAMP:20260612T000000Z
+DTSTART;TZID=Asia/Kolkata:20260614T080000
+DTEND;TZID=Asia/Kolkata:20260614T100000
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Pune Bookies — reading under a tree
+DESCRIPTION:Two hours of silent reading\, somewhere in Pune. Bring a book. The exact spot drops every Saturday at 4:05 PM on WhatsApp & Instagram (@pune_bookies). Free\, always.
+LOCATION:Pune — announced Saturdays
+URL:https://pune-bookies.vercel.app/
+END:VEVENT
+END:VCALENDAR

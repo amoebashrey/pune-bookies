@@ -1,12 +1,22 @@
 {
   "name": "pune-bookies",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Static site for the Pune Bookies community",
+  "description": "Pune Bookies — a reading community. Static site, Astro-built.",
+  "edition": {
+    "name": "Banyan",
+    "note": "MAJOR = edition number; the tree name rides every MINOR. See CHANGELOG.md.",
+    "month": "June 2026"
+  },
+  "type": "module",
   "scripts": {
-    "dev": "live-server --port=5500 --no-browser"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "sync-drive": "node studio/scripts/sync-drive.mjs"
   },
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "@astrojs/vercel": "^10.0.8",
+    "astro": "^6.4.6"
   }
 }
