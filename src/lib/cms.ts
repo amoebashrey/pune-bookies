@@ -17,6 +17,7 @@ import {
   brandStats as fallbackStats,
   brandCases as fallbackCases,
   people as fallbackPeople,
+  noticeBar as fallbackNoticeBar,
 } from '../content/site';
 
 const PROJECT_ID = import.meta.env.SANITY_PROJECT_ID;
@@ -114,6 +115,21 @@ export async function getPress() {
     `*[_type=="pressMention" && visible==true] | order(date desc) {outlet}`
   );
   return usable(rows) ?? fallbackPress;
+}
+
+/**
+ * Notice strip (the bar above the navbar). Returns the Sanity singleton
+ * when configured, else the hardcoded fallback — so the strip is never
+ * empty. The visible line is derived from this by src/lib/noticeBar.ts.
+ */
+export async function getNoticeBar() {
+  const row = await groq<{
+    nextSundayDate?: string;
+    time?: string;
+    location?: string;
+    overrideText?: string;
+  }>(`*[_type=="noticeBar"][0]{nextSundayDate, time, location, overrideText}`);
+  return (row && row.nextSundayDate) ? row : fallbackNoticeBar;
 }
 
 /** Homepage gallery — only when the flag is on AND real photos exist. */

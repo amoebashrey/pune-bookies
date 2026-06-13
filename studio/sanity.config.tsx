@@ -20,9 +20,9 @@ export default defineConfig({
     types: schemaTypes,
   },
   document: {
-    // the settings singleton should never be duplicated or deleted
+    // singletons should never be duplicated or deleted
     actions: (prev, ctx) =>
-      ctx.schemaType === 'siteSettings'
+      ['siteSettings', 'noticeBar'].includes(ctx.schemaType)
         ? prev.filter((a) => !['delete', 'duplicate'].includes(a.action ?? ''))
         : prev,
   },

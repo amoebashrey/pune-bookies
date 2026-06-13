@@ -195,16 +195,67 @@ section {
 }
 
 /* ============================
+   NOTICE STRIP — sticky bar above the navbar, full width.
+   Sanity-backed copy (noticeBar) with a hardcoded fallback;
+   text is rendered by NoticeBar.astro. Navbar offsets below it.
+   ============================ */
+
+.notice-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;                 /* above the fixed navbar (z 50) */
+  box-sizing: border-box;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  background: #B73E2D;         /* gulmohar red */
+  color: #FFFFFF;
+  text-align: center;
+}
+.notice-bar .notice-text {
+  font-family: 'Fraunces', serif;
+  font-variant: small-caps;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: #FFFFFF;
+}
+.notice-bar .notice-cal {
+  position: absolute;
+  right: 80px;                 /* clears the bookmark ribbon in the top-right corner */
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  /* full-opacity cream, not 75% white: at 10px the dimmed version measured
+     ~4.2:1 on gulmohar (below AA 4.5:1). Cream at full opacity is ~5.2:1 and
+     still reads as subordinate to the 12px small-caps line. */
+  color: #FDF6E8;
+  text-decoration: none;
+  transition: text-decoration-color 220ms ease;
+}
+.notice-bar .notice-cal:hover { text-decoration: underline; }
+@media (max-width: 767px) {
+  .notice-bar { height: 44px; padding: 12px 16px; }
+  .notice-bar .notice-cal { display: none; }   /* avoid crowding the corner on mobile */
+}
+@media (prefers-reduced-motion: reduce) {
+  .notice-bar .notice-cal { transition: none; }
+}
+
+/* ============================
    HEADER / NAV  (Aesop / Marginalian / read.cv register:
    wordmark left, tiny small-caps links right, no bar.)
    ============================ */
 
 header.top {
   position: fixed;
-  top: 0;
+  top: 48px;            /* cleared by the sticky notice strip above (.notice-bar) */
   left: 0;
   right: 0;
-  padding: 32px 40px;
+  padding: 32px 72px 32px 40px;   /* right padding clears the 40px ribbon in the corner */
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -278,8 +329,8 @@ header.top .nav-toggle {
 }
 
 @media (max-width: 767px) {
-  /* padding-right clears the 44px bookmark tab in the corner (see BOOKMARK) */
-  header.top { padding: 20px 64px 20px 20px; align-items: center; }
+  /* padding-right clears the silk ribbon in the corner (see BOOKMARK) */
+  header.top { top: 44px; padding: 20px 72px 20px 20px; align-items: center; }
   header.top .mark { font-size: 17px; }
   /* a real tap target: 44px hit area around the 11px label */
   header.top .nav-toggle {
@@ -303,7 +354,7 @@ header.top .nav-toggle {
     overflow: hidden;
     transition: max-height 220ms ease, padding 220ms ease;
   }
-  header.top .nav-links.open { max-height: 280px; padding: 16px 20px 22px; }
+  header.top .nav-links.open { max-height: 280px; padding: 16px 72px 22px 20px; }   /* right padding clears the ribbon */
   header.top .nav-links a { padding: 6px 0; }   /* taller tap rows in the sheet */
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1181,49 +1232,64 @@ html.lenis, html.lenis body { height: auto; }
 
 .bookmark {
   position: fixed;
-  top: -20px;            /* folds ~20px over the top edge of the page */
-  right: 24px;           /* clears the thin scrollbar at the very edge */
-  width: 14px;
-  height: 120px;         /* 20px above the fold + 100px hanging */
+  top: -12px;            /* tucks behind the top edge of the page */
+  right: 24px;           /* clears the thin scrollbar; nav padding clears the ribbon */
+  width: 40px;
+  height: 280px;
   z-index: 100;
   display: block;
   border: none;
   padding: 0;
   text-decoration: none;
-  transition: transform 0.45s cubic-bezier(0.2, 0.6, 0.2, 1);
-  filter: drop-shadow(0 4px 8px rgba(31, 22, 17, 0.12));
+  transition: transform 0.45s cubic-bezier(0.2, 0.6, 0.2, 1), filter 0.45s ease;
+  filter: drop-shadow(0 5px 10px rgba(31, 22, 17, 0.18));
 }
-.bookmark-shape { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
-.bookmark-shape rect { fill: var(--gulmohar); transition: fill 0.45s ease; }
-.bookmark-text {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
-  transform-origin: center;
-  white-space: nowrap;
+.ribbon-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 0;                       /* pivot at the pinned top */
+  animation: ribbon-breath 6s ease-in-out infinite;
+}
+.ribbon-label {
+  fill: #FDF6E8;                                  /* cream */
   font-family: 'Fraunces', serif;
   font-variation-settings: "SOFT" 100, "opsz" 12;
   font-variant: small-caps;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  pointer-events: none;
+  font-size: 11px;
+  letter-spacing: 0.15em;
 }
-.bookmark:hover { transform: translateY(20px); }
-.bookmark:hover .bookmark-shape rect { fill: var(--gulmohar-deep); }
-/* active state (on /brands itself): deeper red, no hover-slide */
-.bookmark.is-active .bookmark-shape rect { fill: var(--gulmohar-deep); }
+
+/* wind-breath: top stays pinned, the lower length swings ~6px left then ~4px right */
+@keyframes ribbon-breath {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(-1.23deg); }          /* bottom curves left ~6px */
+  50%  { transform: rotate(0deg); }
+  75%  { transform: rotate(0.82deg); }           /* bottom curves right ~4px */
+  100% { transform: rotate(0deg); }
+}
+
+/* hover: the whole ribbon descends and stills; shadow deepens */
+.bookmark:hover {
+  transform: translateY(8px);
+  filter: drop-shadow(0 11px 18px rgba(31, 22, 17, 0.30));
+}
+.bookmark:hover .ribbon-svg { animation-play-state: paused; }
+
+/* on /brands itself: stilled, no descend */
+.bookmark.is-active .ribbon-svg { animation-play-state: paused; }
 .bookmark.is-active:hover { transform: none; }
 
-@media (max-width: 767px) {
-  /* a 44px tap target in the corner; the visible ribbon is the
-     32px top-right of it. Header padding-right clears this zone. */
-  .bookmark { top: 0; right: 0; width: 44px; height: 44px; }
-  .bookmark .bookmark-shape { left: auto; bottom: auto; right: 0; top: 0; width: 32px; height: 32px; }
-  .bookmark-text { display: none; }
+@media (max-width: 768px) {
+  /* pause the breath by default for performance; resume on hover/tap */
+  .ribbon-svg { animation-play-state: paused; }
+  .bookmark:hover .ribbon-svg,
+  .bookmark:active .ribbon-svg { animation-play-state: running; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bookmark { transition: none; }
+  .ribbon-svg { animation: none; }
 }
 
 /* ============================

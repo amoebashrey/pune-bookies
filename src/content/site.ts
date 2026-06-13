@@ -29,6 +29,17 @@ export const settings = {
   whatsappNote: 'WhatsApp — the link lives in the Instagram bio',
 };
 
+// Notice strip (the thin bar above the navbar). Sanity's noticeBar
+// singleton overrides this at build; this fallback keeps the strip from
+// ever rendering empty. The visible line is computed from these fields
+// at request time — see src/lib/noticeBar.ts.
+export const noticeBar = {
+  nextSundayDate: '2026-06-14',
+  time: '8 AM',
+  location: 'Mt. Carmel',
+  overrideText: '',
+};
+
 export const stories = [
   {
     title: 'The first Sunday I came alone.',
@@ -130,10 +141,10 @@ export const fitList = [
   'Lifestyle brands with a reading soul, not a reading campaign',
 ];
 
-export const wontList = [
-  'Charge readers to attend.',
-  'Add your branding to the tree, the WhatsApp, or the Sunday itself.',
-  'Capture emails on your behalf.',
-  'Manufacture “moments” for content.',
-  'Pretend a Sunday was about you.',
+export const openList = [
+  'Book brands, publishers, audiobook platforms — anything that gets a reader closer to more books.',
+  'Venue partnerships — farms, large cafés, yoga studios, bookshops, anywhere a couple of hundred quiet readers can spread out for a few hours on a Sunday morning.',
+  'Refreshment partners — coffee, tea, books, bookmarks, tote bags, small things that make a Sunday a bit warmer.',
+  'Themed Sundays — a reading curated around a new book, a topic, a launch, a writer in town.',
+  'Cross-chapter campaigns — if something works in Pune, we can usually extend it through the wider Bookies network, Bombay and Bengaluru and Jaipur included.',
 ];

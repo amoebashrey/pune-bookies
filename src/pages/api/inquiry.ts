@@ -121,7 +121,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const email = String(body.email ?? '').trim().slice(0, FIELD_MAX.email);
   const message = String(body.message ?? '').trim().slice(0, FIELD_MAX.message);
 
-  if (!name || !brand || !message || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+  // brand is optional (the form marks it so); name, message and a valid email stay required
+  if (!name || !message || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
     return new Response('missing or invalid fields', { status: 422 });
   }
 
@@ -132,11 +133,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   const teamText =
     `New partner inquiry via the website\n\n` +
-    `Name:  ${name}\nBrand: ${brand}\nEmail: ${email}\n\n${message}\n\n` +
+    `Name:  ${name}\nBrand: ${brand || '—'}\nEmail: ${email}\n\n${message}\n\n` +
     `— reply directly to this email, it reply-tos the inquirer.`;
 
   const results = await Promise.allSettled([
-    sendMail(TEAM_TO, `Partner inquiry — ${brand}`, teamText, email),
+    sendMail(TEAM_TO, `Partner inquiry — ${brand || name}`, teamText, email),
     sendMail([email], ACK_SUBJECT, ACK_BODY),
     createInquiryDoc({ name, brand, email, message }),
   ]);

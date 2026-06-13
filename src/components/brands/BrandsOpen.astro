@@ -1,0 +1,15 @@
+---
+import SectionHead from './SectionHead.astro';
+import { openList } from '../../content/site';
+---
+<section class="brands-open">
+  <div class="container">
+    <SectionHead eyebrow="the kind of thing that fits" html="What we're <em>open</em> to." />
+    <div class="brands-narrow">
+      <p>If you're thinking about working with us, here's the kind of thing that usually fits:</p>
+    </div>
+    <ul class="fit-list">
+      {openList.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+</section>

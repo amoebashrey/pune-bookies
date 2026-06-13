@@ -56,6 +56,10 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('Pune Bookies')
     .items([
+      S.listItem()
+        .title('📌 Notice strip')
+        .child(S.document().schemaType('noticeBar').documentId('noticeBar')),
+      S.divider(),
       S.documentTypeListItem('sunday').title('Sundays'),
       S.documentTypeListItem('collaboration').title('Collaborations'),
       S.documentTypeListItem('brandPartner').title('Partners'),

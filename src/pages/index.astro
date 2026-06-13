@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
-import CountdownStamp from '../components/CountdownStamp.astro';
 import Manifesto from '../components/home/Manifesto.astro';
+import WhoShowsUp from '../components/home/WhoShowsUp.astro';
 import Timeline from '../components/home/Timeline.astro';
 import Photos from '../components/home/Photos.astro';
 import Stories from '../components/home/Stories.astro';
@@ -59,15 +59,16 @@ const jsonLd = {
     { href: '#manifesto', label: 'Manifesto' },
     { href: '#sundays', label: 'Sundays' },
     { href: '#stories', label: 'Stories' },
-    { href: '/brands', label: 'For brands' },
+    { href: '/brands', label: 'For Brands' },
+    { href: '/brands#get-in-touch', label: 'Write' },
   ]}
   contactAnchor="#contact"
   footerMiddleLink={{ href: '/brands', label: 'For brands' }}
   jsonLd={jsonLd}
 >
   <Hero />
-  <CountdownStamp />
   <Manifesto />
+  <WhoShowsUp />
   <Timeline />
   <Photos />
   <Stories />

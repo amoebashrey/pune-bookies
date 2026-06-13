@@ -261,6 +261,39 @@ const siteSettings = defineType({
 });
 
 /* ────────────────────────────────────────────────────────────────
+   noticeBar — SINGLETON. Drives the sticky strip above the navbar.
+   The site renders a hardcoded fallback when this isn't set, so the
+   strip is never empty. The strip text is computed at request time
+   from these fields (see src/lib/noticeBar.ts).
+   ──────────────────────────────────────────────────────────────── */
+const noticeBar = defineType({
+  name: 'noticeBar',
+  title: 'Notice strip',
+  type: 'document',
+  description: 'The thin strip at the very top of every page. Set the next Sunday and the site writes the line for you. Changes appear ~2 minutes after you press Publish.',
+  fields: [
+    defineField({
+      name: 'nextSundayDate', title: 'Next Sunday date', type: 'date',
+      description: 'The date of the next gathering, e.g. 2026-06-14. Required.',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'time', title: 'Start time', type: 'string', initialValue: '8 AM',
+      description: 'When it starts. Default "8 AM".',
+    }),
+    defineField({
+      name: 'location', title: 'Location', type: 'string', initialValue: 'Mt. Carmel',
+      description: 'Where it is. Default "Mt. Carmel".',
+    }),
+    defineField({
+      name: 'overrideText', title: 'Override line (optional)', type: 'text', rows: 2,
+      description: 'If set, this exact line is shown verbatim, ignoring the date logic. Use for one-offs ("we\'re off this Sunday").',
+    }),
+  ],
+  preview: { prepare: () => ({ title: 'Notice strip', subtitle: 'the line at the top of every page' }) },
+});
+
+/* ────────────────────────────────────────────────────────────────
    partnerInquiry — the partnerships CRM (written by the form)
    ──────────────────────────────────────────────────────────────── */
 const partnerInquiry = defineType({
@@ -298,5 +331,5 @@ const partnerInquiry = defineType({
 
 export const schemaTypes = [
   sunday, collaboration, brandPartner, teamMember, siteStat,
-  story, faqItem, pressMention, city, siteSettings, partnerInquiry,
+  story, faqItem, pressMention, city, siteSettings, noticeBar, partnerInquiry,
 ];
