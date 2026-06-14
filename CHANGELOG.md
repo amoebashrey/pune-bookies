@@ -21,10 +21,13 @@ All notable changes to the Pune Bookies site. Format follows [Keep a Changelog](
 *Two polish rounds, reconciled to the net result. A notice strip was tried in round 1 and pulled in round 2 for fighting the brand — since it never shipped, it isn't logged here.*
 
 ### Added
+- A watercolour onboarding sequence on the homepage: three painted frames (readers arriving → walking to the tree → seated beneath it) bloom in over ~6s with drifting petals, then dissolve to reveal the hero. Plays once per session, with a quiet skip and a reduced-motion fallback (no overlay — the hero shows instantly).
+- A seated-readers watercolour painting as the hero illustration.
 - A "Write" link in the navbar (homepage and /brands), pointing straight at the inquiry form.
 - A "What we're open to" section on /brands — the kinds of partnerships that usually fit.
 
 ### Changed
+- The hero illustration is now the watercolour painting (the final onboarding frame), replacing the hand-drawn CSS tree; the display "Pune Bookies" wordmark now fits within the first fold on short laptops.
 - The homepage countdown stamp now takes its next-Sunday date, time and an optional one-off override line from the Studio (`noticeBar` singleton); its where-line reads "Location shared in our WhatsApp groups" — the actual spot is never shown on the site.
 - The partner ribbon is a longer 40×280 matte-fabric variant (no satin sheen), with a gentle wind-breath.
 - The homepage manifesto is plainer — two paragraphs, the "cathedral" line gone.
@@ -35,6 +38,7 @@ All notable changes to the Pune Bookies site. Format follows [Keep a Changelog](
 - The /brands intro restored to the reading-community framing; "Things we won't do" replaced by "How we work with brands".
 
 ### Removed
+- The old hand-drawn hero tree and the squirrel (replaced by the painting).
 - The "Where we read" specific locations from the homepage (they live in WhatsApp).
 - The "Who we're a fit for" section on /brands (redundant with "What we're open to").
 - The "Where the money goes" section on /brands.

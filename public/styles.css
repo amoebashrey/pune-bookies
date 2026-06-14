@@ -332,11 +332,90 @@ header.top .nav-toggle {
 }
 
 .hero-illustration {
-  /* width is also capped by viewport height (aspect 3:2 → height ≈ width/1.5),
-     so the tree shrinks rather than pushing the wordmark off-screen */
-  width: min(520px, 82vw, 44vh);
-  margin: 0 auto clamp(0.5rem, 1.6vh, 2rem);
-  filter: drop-shadow(0 8px 24px rgba(31, 22, 17, 0.08));
+  /* the painting is 16:9 (1376×768); cap width by 72vh too (height ≈ width×0.56)
+     so the whole composition stays within the first fold on short laptops */
+  width: min(620px, 90vw, 72vh);
+  margin: 0 auto clamp(0.25rem, 1vh, 1.25rem);
+}
+.hero-illustration img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1376 / 768;
+}
+
+/* ============================
+   ONBOARDING OVERLAY — homepage, once per session (Onboarding.astro).
+   Shown only when the pre-paint gate sets data-onboard="play"; reduced
+   motion + returning visitors get "skip" and never see it.
+   ============================ */
+.onboard {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  background: #FDF6E8;
+  box-sizing: border-box;
+  /* match the hero's top spacing so frame 3 lands where the hero painting sits */
+  padding-top: clamp(5rem, 9vh, 8rem);
+  opacity: 1;
+  transition: opacity 700ms ease;
+}
+html[data-onboard="play"] .onboard { display: flex; flex-direction: column; align-items: center; }
+.onboard.is-leaving { opacity: 0; }
+
+.onboard-stage {
+  position: relative;
+  width: min(620px, 90vw, 72vh);
+  aspect-ratio: 1376 / 768;
+}
+.onboard-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.03);
+  filter: blur(6px);
+  will-change: opacity, transform, filter;
+}
+.onboard-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.onboard-frame.is-blooming {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+  transition: opacity 500ms ease, transform 1100ms ease, filter 1100ms ease;
+}
+
+.onboard-petals { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.onboard-petal { position: absolute; top: 0; opacity: 0; animation: onboard-petal-fall linear infinite; }
+@keyframes onboard-petal-fall {
+  0%   { transform: translateY(-12vh) translateX(0) rotate(0deg); opacity: 0; }
+  12%  { opacity: 0.7; }
+  88%  { opacity: 0.7; }
+  100% { transform: translateY(108vh) translateX(24px) rotate(190deg); opacity: 0; }
+}
+
+.onboard-skip {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.75rem;
+  z-index: 3;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  font-variant: small-caps;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(31, 22, 17, 0.72);   /* AA on the cream overlay (matches nav links) */
+  padding: 8px 10px;
+}
+.onboard-skip:hover { color: var(--gulmohar); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* belt-and-braces — never show or animate under reduced motion */
+  .onboard, html[data-onboard="play"] .onboard { display: none !important; }
+  .onboard-frame { transition: none; }
+  .onboard-petal { animation: none; }
 }
 
 .hero-wordmark {
@@ -430,13 +509,15 @@ header.top .nav-toggle {
   font-style: italic;
   font-variation-settings: "SOFT" 100, "opsz" 12;
   font-size: 0.85rem;
-  color: var(--ink-faint);
+  /* was var(--ink-faint) + an opacity pulse to 0.5 — that dipped below AA.
+     Solid 0.72 ink (same as the nav links) keeps it subtle but ≥4.5:1. */
+  color: rgba(31, 22, 17, 0.72);
   animation: floatDown 2.5s ease-in-out infinite;
 }
 
 @keyframes floatDown {
-  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
-  50% { transform: translateX(-50%) translateY(6px); opacity: 0.9; }
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
 }
 
 /* ============================
@@ -1153,10 +1234,6 @@ html[data-arrival="running"] .hero .hero-inner.reveal {
   transition: none !important;
 }
 
-html[data-arrival="running"] .hero-illustration ellipse,
-html[data-arrival="running"] .hero-illustration g {
-  opacity: 0;
-}
 html[data-arrival="running"] .hero-wordmark .pune,
 html[data-arrival="running"] .hero-wordmark .bookies,
 html[data-arrival="running"] .hero-tagline,
