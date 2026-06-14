@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
-import Onboarding from '../components/home/Onboarding.astro';
+import Preloader from '../components/home/Preloader.astro';
 import CountdownStamp from '../components/CountdownStamp.astro';
 import Manifesto from '../components/home/Manifesto.astro';
 import WhoShowsUp from '../components/home/WhoShowsUp.astro';
@@ -69,27 +69,25 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <Fragment slot="head">
-    <!-- onboarding frames (frame 3 doubles as the hero LCP image) -->
-    <link rel="preload" as="image" href="/illustrations/onboard-1-distance.webp" type="image/webp" />
-    <link rel="preload" as="image" href="/illustrations/onboard-2-walking.webp" type="image/webp" />
+    <!-- the seated-readers painting is the hero LCP image and the preloader subject -->
+    <link rel="preload" as="image" href="/illustrations/onboard-3-hero.webp" type="image/webp" />
     <script is:inline>
-      /* Pre-paint onboarding gate (homepage only). Decides play vs skip before
-         first paint so the overlay never flashes. On play, also settle the old
-         hero arrival bloom (data-arrival=done) — the hero sits ready beneath. */
+      /* Pre-paint preloader gate (homepage only). Plays on EVERY load;
+         prefers-reduced-motion skips it entirely. On play, settle the old hero
+         arrival bloom (data-arrival=done) so the hero sits ready beneath. */
       (function (d) {
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var seen; try { seen = sessionStorage.getItem('pb_onboard_v1'); } catch (e) { seen = '1'; }
-        if (reduce || seen) {
-          d.documentElement.setAttribute('data-onboard', 'skip');
+        if (reduce) {
+          d.documentElement.setAttribute('data-preload', 'skip');
         } else {
-          d.documentElement.setAttribute('data-onboard', 'play');
+          d.documentElement.setAttribute('data-preload', 'play');
           d.documentElement.setAttribute('data-arrival', 'done');
         }
       })(document);
     </script>
   </Fragment>
 
-  <Onboarding slot="after-main" />
+  <Preloader slot="after-main" />
   <Hero />
   <CountdownStamp />
   <Manifesto />

@@ -317,25 +317,30 @@ header.top .nav-toggle {
 
 .hero {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  /* vh-aware so the whole composition fits in the first viewport on
-     short laptops (1440×900, 1280×800) without clipping "Bookies" */
-  padding: clamp(5rem, 9vh, 8rem) 1.5rem clamp(1.5rem, 4vh, 4rem);
+  /* top-aligned: painting → wordmark → subcopy flow from the top so the stack
+     has a clean rhythm; stats / IG / scroll-cue rest toward the bottom. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(4.5rem, 8vh, 7rem) 1.5rem clamp(3.5rem, 7vh, 5rem);
   position: relative;
 }
 
 .hero-inner {
+  width: 100%;          /* fill the column; without this, flex align-items:center
+                           shrinks it to the wordmark's max-content and overflows mobile */
   max-width: 920px;
   text-align: center;
   position: relative;
 }
 
 .hero-illustration {
-  /* the painting is 16:9 (1376×768); cap width by 72vh too (height ≈ width×0.56)
-     so the whole composition stays within the first fold on short laptops */
-  width: min(620px, 90vw, 72vh);
-  margin: 0 auto clamp(0.25rem, 1vh, 1.25rem);
+  /* the painting is 16:9 (1376×768); cap width by 70vh (height ≈ width×0.56 ≈ 39vh)
+     so the painting + one-line wordmark + subcopy stay within the first fold.
+     84vw (not 90) leaves room for the hero's 1.5rem side padding → no overflow at 375px */
+  width: min(560px, 84vw, 70vh);
+  margin: 0 auto clamp(0.5rem, 1.5vh, 1.5rem);
 }
 .hero-illustration img {
   display: block;
@@ -345,56 +350,60 @@ header.top .nav-toggle {
 }
 
 /* ============================
-   ONBOARDING OVERLAY — homepage, once per session (Onboarding.astro).
-   Shown only when the pre-paint gate sets data-onboard="play"; reduced
-   motion + returning visitors get "skip" and never see it.
+   PRELOADER — homepage watercolour bloom on the single hero painting
+   (Preloader.astro). Shown on every load when the pre-paint gate sets
+   data-preload="play"; reduced motion gets "skip" and never sees it.
+   Mirrors the hero's classes/position so the handoff is seamless.
    ============================ */
-.onboard {
+.preloader {
   position: fixed;
   inset: 0;
   z-index: 9999;
   display: none;
   background: #FDF6E8;
   box-sizing: border-box;
-  /* match the hero's top spacing so frame 3 lands where the hero painting sits */
-  padding-top: clamp(5rem, 9vh, 8rem);
+  /* same top-aligned spacing as the hero so the painting + wordmark line up */
+  padding: clamp(4.5rem, 8vh, 7rem) 1.5rem 0;
   opacity: 1;
-  transition: opacity 700ms ease;
+  transition: opacity 600ms ease;
 }
-html[data-onboard="play"] .onboard { display: flex; flex-direction: column; align-items: center; }
-.onboard.is-leaving { opacity: 0; }
+html[data-preload="play"] .preloader { display: block; }
+.preloader.is-leaving { opacity: 0; }
 
-.onboard-stage {
-  position: relative;
-  width: min(620px, 90vw, 72vh);
-  aspect-ratio: 1376 / 768;
-}
-.onboard-frame {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
+.preloader-art img {
+  /* soft "wet" state → dries to sharp full colour on .is-bloomed */
   transform: scale(1.03);
-  filter: blur(6px);
-  will-change: opacity, transform, filter;
+  filter: blur(6px) saturate(0.6) brightness(1.05);
+  opacity: 0.92;
+  transition: transform 900ms ease, filter 900ms ease, opacity 900ms ease;
 }
-.onboard-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.onboard-frame.is-blooming {
-  opacity: 1;
+.preloader.is-bloomed .preloader-art img {
   transform: scale(1);
-  filter: blur(0);
-  transition: opacity 500ms ease, transform 1100ms ease, filter 1100ms ease;
+  filter: blur(0) saturate(1) brightness(1);
+  opacity: 1;
 }
 
-.onboard-petals { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
-.onboard-petal { position: absolute; top: 0; opacity: 0; animation: onboard-petal-fall linear infinite; }
-@keyframes onboard-petal-fall {
+.preloader-wordmark {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+.preloader.is-bloomed .preloader-wordmark {
+  opacity: 1;
+  transform: none;
+  transition-delay: 350ms;          /* fades up just after the painting settles */
+}
+
+.preloader-petals { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.preloader-petal { position: absolute; top: 0; opacity: 0; animation: preloader-petal-fall linear infinite; }
+@keyframes preloader-petal-fall {
   0%   { transform: translateY(-12vh) translateX(0) rotate(0deg); opacity: 0; }
-  12%  { opacity: 0.7; }
-  88%  { opacity: 0.7; }
-  100% { transform: translateY(108vh) translateX(24px) rotate(190deg); opacity: 0; }
+  12%  { opacity: 0.6; }
+  88%  { opacity: 0.6; }
+  100% { transform: translateY(108vh) translateX(22px) rotate(180deg); opacity: 0; }
 }
 
-.onboard-skip {
+.preloader-skip {
   position: absolute;
   bottom: 1.5rem;
   right: 1.75rem;
@@ -409,35 +418,39 @@ html[data-onboard="play"] .onboard { display: flex; flex-direction: column; alig
   color: rgba(31, 22, 17, 0.72);   /* AA on the cream overlay (matches nav links) */
   padding: 8px 10px;
 }
-.onboard-skip:hover { color: var(--gulmohar); }
+.preloader-skip:hover { color: var(--gulmohar); }
 
 @media (prefers-reduced-motion: reduce) {
   /* belt-and-braces — never show or animate under reduced motion */
-  .onboard, html[data-onboard="play"] .onboard { display: none !important; }
-  .onboard-frame { transition: none; }
-  .onboard-petal { animation: none; }
+  .preloader, html[data-preload="play"] .preloader { display: none !important; }
+  .preloader-art img, .preloader-wordmark { transition: none; }
+  .preloader-petal { animation: none; }
 }
 
 .hero-wordmark {
-  font-size: clamp(3.5rem, min(11.5vw, 13.5vh), 8rem);
+  /* one line across desktop; sized so "Pune Bookies" never wraps ≥ 480px */
+  font-size: clamp(3rem, 9vw, 6.5rem);
   margin: 0;
   position: relative;
-  line-height: 0.92;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .hero-wordmark .pune {
-  display: block;
   font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 0;
 }
 
 .hero-wordmark .bookies {
-  display: block;
   font-style: italic;
   font-variation-settings: "SOFT" 100, "opsz" 144, "WONK" 1;
   color: var(--gulmohar);
-  margin-top: -0.2em;
-  margin-left: -0.04em;   /* optical centring: italic mass leans right */
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
+}
+
+/* below ~480px: size it to fit one line within the narrow column, and allow
+   a graceful wrap if a very small screen still can't fit it */
+@media (max-width: 480px) {
+  .hero-wordmark { white-space: normal; font-size: clamp(2.25rem, 11vw, 3.25rem); }
 }
 
 .hero-tagline {
@@ -446,7 +459,7 @@ html[data-onboard="play"] .onboard { display: flex; flex-direction: column; alig
   font-size: clamp(1.15rem, 2vw, 1.4rem);
   line-height: 1.5;
   max-width: 30ch;
-  margin: clamp(1.25rem, 3vh, 2.5rem) auto 0;
+  margin: clamp(1rem, 2.5vh, 1.75rem) auto 0;
   color: var(--ink-soft);
   font-weight: 400;
 }
@@ -468,7 +481,7 @@ html[data-onboard="play"] .onboard { display: flex; flex-direction: column; alig
 }
 
 .hero-meta {
-  margin-top: clamp(1.5rem, 3.5vh, 4rem);
+  margin-top: clamp(1.25rem, 3vh, 2.25rem);
   display: flex;
   gap: 3rem;
   justify-content: center;
@@ -490,7 +503,7 @@ html[data-onboard="play"] .onboard { display: flex; flex-direction: column; alig
 
 /* quiet Instagram pathway, above the fold (reader job #3) */
 .hero-ig {
-  margin-top: clamp(1rem, 2.2vh, 2.2rem);
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
   font-family: 'Fraunces', serif;
   font-style: italic;
   font-variation-settings: "SOFT" 100, "opsz" 14;
