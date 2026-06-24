@@ -1138,30 +1138,6 @@ footer {
   transform: translateY(0);
 }
 
-/* ============================
-   ARRIVAL SEQUENCE states (driven by the pre-paint gate script
-   + animations.js — see those for the choreography)
-   ============================ */
-
-html[data-arrival="running"] .hero .hero-inner.reveal {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-html[data-arrival="running"] .hero-illustration ellipse,
-html[data-arrival="running"] .hero-illustration g {
-  opacity: 0;
-}
-html[data-arrival="running"] .hero-wordmark .pune,
-html[data-arrival="running"] .hero-wordmark .bookies,
-html[data-arrival="running"] .hero-tagline,
-html[data-arrival="running"] .hero-meta,
-html[data-arrival="running"] .hero-ig,
-html[data-arrival="running"] .scroll-cue {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue { animation: none; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }

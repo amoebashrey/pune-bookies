@@ -1,36 +1,10 @@
 /* ============================================================
    Pune Bookies — motion layer
    ============================================================
-   #1 ARRIVAL SEQUENCE (this file currently builds only this).
-
-   Every timing lives in ARRIVAL below, in milliseconds.
-   Tune the feel by changing one number — nothing else references
-   these values directly.
+   The first-visit ARRIVAL SEQUENCE (hero bloom) has been removed;
+   the hero now renders in its settled state immediately. The
+   remaining layers below are unaffected.
    ============================================================ */
-
-// ---- Arrival timings (ms) ----------------------------------
-const ARRIVAL = {
-  CANOPY_START:    200,   // first watercolour wash begins
-  CANOPY_STAGGER:  150,   // gap between each of the 4 canopy layers
-  CANOPY_DUR:      1100,  // how long each wash takes to bleed in
-
-  STRUCTURE_START: 1000,  // trunk, branches, specks, sloth, ground
-  STRUCTURE_DUR:   900,
-
-  PUNE_START:      2200,  // "Pune" inks on
-  PUNE_DUR:        600,
-  BOOKIES_START:   2800,  // "Bookies" a beat later
-  BOOKIES_DUR:     400,
-
-  TAGLINE_START:   3200,
-  TAGLINE_DUR:     800,
-
-  META_START:      3600,  // stats line + scroll cue settle in last
-  META_DUR:        700,
-};
-
-const ARRIVAL_EASE = 'cubic-bezier(0.2, 0.6, 0.2, 1)';
-const INK_BLUR     = 4;   // px — wet-ink start blur on the wordmark
 
 // ---- Petal drift (#2) --------------------------------------
 const PETALS = {
@@ -84,113 +58,6 @@ const ATMOSPHERE = {
   BLEED_SCALE_TO:    1.6,
   BLEED_OPACITY:     0.4,    // peak opacity
 };
-
-// ------------------------------------------------------------
-
-(function () {
-  const root = document.documentElement;
-
-  // The inline <head> gate decides 'running' vs 'done'. We only drive
-  // the bloom when it asked us to; everything else is already settled.
-  if (root.getAttribute('data-arrival') !== 'running') return;
-
-  if (window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    finish();
-    return;
-  }
-
-  // Mark the session so repeat loads skip the bloom.
-  try { sessionStorage.setItem('pb_arrival_seen', '1'); } catch (e) {}
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
-  }
-
-  // --- hand back to the resting state -----------------------
-  function finish() {
-    root.setAttribute('data-arrival', 'done');
-    // Ensure the hero's own scroll-reveal is settled so nothing snaps.
-    const inner = document.querySelector('.hero .hero-inner');
-    if (inner) inner.classList.add('reveal', 'visible');
-  }
-
-  function endTime(a) {
-    const t = a.effect.getComputedTiming();
-    return (t.delay || 0) + (t.activeDuration || 0);
-  }
-
-  // --- the sequence -----------------------------------------
-  function run() {
-    const svg      = document.querySelector('.hero-illustration svg');
-    const canopies = svg ? [...svg.querySelectorAll('ellipse')]
-                              .filter(e => /canopy/.test(e.getAttribute('fill') || '')) : [];
-    const ground   = svg ? svg.querySelector('ellipse[fill="url(#ground)"]') : null;
-    const groups   = svg ? [...svg.querySelectorAll('g')] : [];
-    const pune     = document.querySelector('.hero-wordmark .pune');
-    const bookies  = document.querySelector('.hero-wordmark .bookies');
-    const tagline  = document.querySelector('.hero-tagline');
-    const meta     = document.querySelector('.hero-meta');
-    const cue      = document.querySelector('.scroll-cue');
-
-    const anims = [];
-
-    // fade an element up to a target opacity, holding it there afterwards
-    const fadeTo = (el, to, start, dur) => {
-      if (!el) return;
-      anims.push(el.animate(
-        [{ opacity: 0 }, { opacity: to }],
-        { delay: start, duration: dur, easing: ARRIVAL_EASE, fill: 'forwards' }
-      ));
-    };
-
-    // 1) Canopy washes bleed in, layer by layer (riding the SVG
-    //    #watercolour displacement filter for painterly edges).
-    canopies.forEach((el, i) => {
-      const to = parseFloat(el.getAttribute('opacity')) || 1;
-      fadeTo(el, to, ARRIVAL.CANOPY_START + i * ARRIVAL.CANOPY_STAGGER, ARRIVAL.CANOPY_DUR);
-    });
-
-    // 2) Ground shadow + structure (trunk, branches, specks, sloth)
-    const groundTo = ground ? (parseFloat(ground.getAttribute('opacity')) || 1) : 1;
-    fadeTo(ground, groundTo, ARRIVAL.STRUCTURE_START, ARRIVAL.STRUCTURE_DUR);
-    groups.forEach(g => fadeTo(g, 1, ARRIVAL.STRUCTURE_START, ARRIVAL.STRUCTURE_DUR));
-
-    // 3 + 4) Wordmark inks on — wet bleed, sharpening left→right.
-    const inkOn = (el, start, dur) => {
-      if (!el) return;
-      anims.push(el.animate(
-        [
-          { opacity: 0,   filter: `blur(${INK_BLUR}px)`,       clipPath: 'inset(0 100% 0 0)' },
-          { opacity: 0.6, filter: `blur(${INK_BLUR * 0.4}px)`, clipPath: 'inset(0 30% 0 0)', offset: 0.6 },
-          { opacity: 1,   filter: 'blur(0px)',                 clipPath: 'inset(0 0 0 0)' }
-        ],
-        { delay: start, duration: dur, easing: ARRIVAL_EASE, fill: 'forwards' }
-      ));
-    };
-    inkOn(pune,    ARRIVAL.PUNE_START,    ARRIVAL.PUNE_DUR);
-    inkOn(bookies, ARRIVAL.BOOKIES_START, ARRIVAL.BOOKIES_DUR);
-
-    // 5) Tagline fades up last-but-one.
-    if (tagline) anims.push(tagline.animate(
-      [{ opacity: 0, transform: 'translateY(8px)' },
-       { opacity: 1, transform: 'translateY(0)' }],
-      { delay: ARRIVAL.TAGLINE_START, duration: ARRIVAL.TAGLINE_DUR, easing: ARRIVAL_EASE, fill: 'forwards' }
-    ));
-
-    // 6) Stats line settles; scroll cue's existing float holds until now.
-    fadeTo(meta, 1, ARRIVAL.META_START, ARRIVAL.META_DUR);
-    if (cue) cue.style.animationDelay = ARRIVAL.META_START + 'ms';
-
-    // When the last thing settles, hand off to the resting state.
-    const last = anims.slice().sort((a, b) => endTime(b) - endTime(a))[0];
-    if (last) last.addEventListener('finish', finish);
-    else finish();
-  }
-})();
-
 
 /* ============================================================
    #2 PETAL DRIFT — continuous gulmohar petals behind content.
@@ -283,7 +150,8 @@ const ATMOSPHERE = {
     vw = window.innerWidth; vh = window.innerHeight;
   }, { passive: true });
 
-  // Hold petals until the arrival bloom has settled on first load.
+  // Mount once the document marks itself settled (data-arrival="done").
+  // With the arrival bloom removed this resolves immediately.
   function mount() { document.body.appendChild(layer); if (!document.hidden) start(); }
   function whenSettled(cb) {
     if (root.getAttribute('data-arrival') !== 'running') { cb(); return; }

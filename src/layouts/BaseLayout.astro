@@ -1,6 +1,6 @@
 ---
 /**
- * BaseLayout — head (meta/OG/icons/fonts), arrival gate, navbar,
+ * BaseLayout — head (meta/OG/icons/fonts), navbar,
  * bookmark, shared SVG defs, footer, shared motion scripts.
  * Page content goes in the default slot; page-specific inline
  * scripts go in slot="tail".
@@ -89,28 +89,11 @@ const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
 <script is:inline>
-  /* Arrival gate — runs before paint so the hero never flashes.
-     First visit in a session → run the bloom. Repeat visit or
-     reduced-motion → settled state, no animation. */
-  (function (d) {
-    var KEY = 'pb_arrival_seen';
-    var reduce = window.matchMedia &&
-                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var seen;
-    try { seen = sessionStorage.getItem(KEY); } catch (e) { seen = '1'; }
-
-    if (seen || reduce) {
-      d.documentElement.setAttribute('data-arrival', 'done');
-    } else {
-      d.documentElement.setAttribute('data-arrival', 'running');
-      /* Failsafe: never leave the hero hidden if animations.js fails. */
-      setTimeout(function () {
-        if (d.documentElement.getAttribute('data-arrival') === 'running') {
-          d.documentElement.setAttribute('data-arrival', 'done');
-        }
-      }, 6000);
-    }
-  })(document);
+  /* The hero renders in its settled state immediately — the arrival
+     animation has been removed. The attribute is kept as 'done' so the
+     petal drift's "wait until settled" check in animations.js resolves
+     at once. */
+  document.documentElement.setAttribute('data-arrival', 'done');
 </script>
 
 <slot name="head" />
