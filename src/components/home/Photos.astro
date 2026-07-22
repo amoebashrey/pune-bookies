@@ -5,12 +5,17 @@ import { getSundayPhotos } from '../../lib/cms';
 const sundayPhotos = await getSundayPhotos();   // null until flag + photos exist
 
 const tiles = [
-  { cls: 't1', src: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&q=80', alt: 'Placeholder: shelves of books in warm light', w: 900, h: 1125, cap: 'March 2026' },
-  { cls: 't2', src: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=700&q=80', alt: 'Placeholder: an open book resting on grass', w: 700, h: 875, cap: "A regular's spot · February 2026" },
-  { cls: 't3', src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80', alt: 'Placeholder: a reader outdoors with a book', w: 600, h: 800, cap: 'April 2026' },
-  { cls: 't4', src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=700&q=80', alt: 'Placeholder: an open book, pages catching the light', w: 700, h: 875, cap: 'A reader, unnamed · January 2026' },
-  { cls: 't5', src: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=900&q=80', alt: 'Placeholder: a person reading quietly', w: 900, h: 720, cap: 'The morning the geese came · November 2024' },
-  { cls: 't6', src: 'https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=80', alt: 'Placeholder: a tree canopy from below', w: 600, h: 800, cap: 'Under the rain tree · December 2024' },
+  { cls: 't1',  src: '/photos/sunday-2.jpg',  alt: 'A Sunday with Pune Bookies', w: 878,  h: 1200 },
+  { cls: 't2',  src: '/photos/sunday-3.jpg',  alt: 'A Sunday with Pune Bookies', w: 965,  h: 1200 },
+  { cls: 't3',  src: '/photos/sunday-4.jpg',  alt: 'A Sunday with Pune Bookies', w: 804,  h: 1200 },
+  { cls: 't4',  src: '/photos/sunday-5.jpg',  alt: 'A Sunday with Pune Bookies', w: 863,  h: 1200 },
+  { cls: 't5',  src: '/photos/sunday-1.jpg',  alt: 'A Sunday with Pune Bookies', w: 1200, h: 1109 },
+  { cls: 't6',  src: '/photos/sunday-6.jpg',  alt: 'A Sunday with Pune Bookies', w: 857,  h: 1200 },
+  { cls: 't7',  src: '/photos/sunday-7.jpg',  alt: 'A Sunday with Pune Bookies', w: 920,  h: 1200 },
+  { cls: 't8',  src: '/photos/sunday-9.jpg',  alt: 'A Sunday with Pune Bookies', w: 974,  h: 1200 },
+  { cls: 't9',  src: '/photos/sunday-10.jpg', alt: 'A Sunday with Pune Bookies', w: 1033, h: 1200 },
+  { cls: 't10', src: '/photos/sunday-8.jpg',  alt: 'A Sunday with Pune Bookies', w: 1050, h: 1200 },
+  { cls: 't11', src: '/photos/sunday-11.jpg', alt: 'A Sunday with Pune Bookies', w: 976,  h: 1200 },
 ];
 ---
 <section class="atmosphere">
@@ -35,13 +40,10 @@ const tiles = [
         {tiles.map((t) => (
           <figure class:list={['photo-tile', t.cls]}>
             <img src={t.src} alt={t.alt} width={t.w} height={t.h} loading="lazy" decoding="async" />
-            <figcaption class="photo-caption">{t.cap}</figcaption>
           </figure>
         ))}
       </div>
     )}
-
-    {!sundayPhotos && <p class="photo-note">— our team has shot a year of Sundays. these are placeholders —</p>}
 
   </div>
 </section>

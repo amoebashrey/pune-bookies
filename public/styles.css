@@ -771,6 +771,11 @@ header.top .nav-toggle {
 .photo-tile.t4 { grid-column: span 4; aspect-ratio: 4/5; }
 .photo-tile.t5 { grid-column: span 5; aspect-ratio: 5/4; margin-top: -1.5rem; }
 .photo-tile.t6 { grid-column: span 3; aspect-ratio: 3/4; margin-top: 1.5rem; }
+.photo-tile.t7 { grid-column: span 5; aspect-ratio: 4/5; margin-top: 2rem; }
+.photo-tile.t8 { grid-column: span 4; aspect-ratio: 4/5; margin-top: -1rem; }
+.photo-tile.t9 { grid-column: span 3; aspect-ratio: 3/4; margin-top: 2rem; }
+.photo-tile.t10 { grid-column: span 6; aspect-ratio: 5/4; }
+.photo-tile.t11 { grid-column: span 6; aspect-ratio: 5/4; margin-top: 2rem; }
 
 .photo-caption {
   position: absolute;
@@ -799,21 +804,13 @@ header.top .nav-toggle {
     gap: 0.8rem;
   }
   .photo-tile.t1, .photo-tile.t2, .photo-tile.t3,
-  .photo-tile.t4, .photo-tile.t5, .photo-tile.t6 {
+  .photo-tile.t4, .photo-tile.t5, .photo-tile.t6,
+  .photo-tile.t7, .photo-tile.t8, .photo-tile.t9,
+  .photo-tile.t10, .photo-tile.t11 {
     grid-column: span 1;
     margin-top: 0;
     aspect-ratio: 3/4;
   }
-}
-
-.photo-note {
-  text-align: center;
-  font-family: 'Fraunces', serif;
-  font-style: italic;
-  font-variation-settings: "SOFT" 100, "opsz" 14;
-  font-size: 0.95rem;
-  color: var(--ink-faint);
-  margin-top: 3rem;
 }
 
 /* ============================
