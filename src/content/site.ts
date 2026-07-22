@@ -24,7 +24,6 @@ export const settings = {
     { value: '43k+', label: 'following the journey', ig: true },
     { value: '3', label: 'cities and growing' },
   ],
-  igPathwayLine: 'the Sundays live on Instagram →',
   footerTagline: 'Reading together since 2024 · Pune, India',
   whatsappNote: 'WhatsApp — the link lives in the Instagram bio',
 };

@@ -36,9 +36,12 @@ const settings = await getSettings();
       {settings.heroStats.map((s) => (
         <span>
           {s.ig ? (
-            <a class="ig-stat" href={settings.igUrl} target="_blank" rel="noopener" data-track="ig_outbound" aria-label={`${s.value} ${s.label} on Instagram`}>
+            <a class="ig-stat" href={settings.igUrl} target="_blank" rel="noopener" data-track="ig_outbound" aria-label={`${s.value} ${s.label} — ${settings.igHandle} on Instagram`}>
               <strong>{s.value}</strong>{s.label}
-              <svg class="ig-glyph" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></g></svg>
+              <span class="ig-handle">
+                <svg class="ig-glyph" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></g></svg>
+                {settings.igHandle}
+              </span>
             </a>
           ) : (
             <Fragment><strong>{s.value}</strong>{s.label}</Fragment>
@@ -46,8 +49,6 @@ const settings = await getSettings();
         </span>
       ))}
     </div>
-
-    <p class="hero-ig">{settings.igPathwayLine} <a href={settings.igUrl} target="_blank" rel="noopener" data-track="ig_outbound">{settings.igHandle}</a></p>
 
   </div>
 
