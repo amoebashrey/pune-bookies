@@ -1,12 +1,11 @@
 ---
 /**
  * BaseLayout — head (meta/OG/icons/fonts), arrival gate, navbar,
- * bookmark, shared SVG defs, footer, shared motion scripts.
+ * shared SVG defs, footer, shared motion scripts.
  * Page content goes in the default slot; page-specific inline
  * scripts go in slot="tail".
  */
 import Navbar from '../components/Navbar.astro';
-import Bookmark from '../components/Bookmark.astro';
 import SharedDefs from '../components/SharedDefs.astro';
 import Footer from '../components/Footer.astro';
 
@@ -20,7 +19,6 @@ interface Props {
   ogImageAlt?: string;
   ogDescription?: string;
   navLinks: NavLink[];
-  bookmarkActive?: boolean;
   bodyAttrs?: Record<string, string>;
   contactAnchor?: string;          // non-JS fallback href for obfuscated mails
   footerMiddleLink?: NavLink;
@@ -33,7 +31,6 @@ const {
   ogImageAlt = 'A watercolour gulmohar tree on cream paper — Pune Bookies',
   ogDescription = description,
   navLinks,
-  bookmarkActive = false,
   bodyAttrs = {},
   contactAnchor = '#contact',
   footerMiddleLink = { href: '/brands', label: 'For brands' },
@@ -119,7 +116,6 @@ const UMAMI_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
 <body {...bodyAttrs}>
 
 <Navbar links={navLinks} />
-<Bookmark active={bookmarkActive} />
 <SharedDefs />
 
 <main id="top">

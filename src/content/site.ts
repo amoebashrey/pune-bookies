@@ -17,12 +17,12 @@ export const settings = {
     { name: 'Tanvi', user: 'tanvi.lele3944', domain: 'gmail.com' },
     { name: 'Shrey', user: 'shreyasjadhav531', domain: 'gmail.com' },
   ],
-  heroTagline: "We read together. Every Sunday, eight to ten, under a tree somewhere in Pune.",
+  heroTagline: "Building Pune's most vibrant community of readers.",
   heroStress: "We're also <em>not</em> that kind of bookie.",
   heroStats: [
-    { value: '250', label: 'readers, most Sundays' },
-    { value: '43,900', label: 'following along' },
-    { value: '4', label: 'cities and growing' },
+    { value: '200', label: 'readers, most Sundays' },
+    { value: '43k+', label: 'following the journey', ig: true },
+    { value: '3', label: 'cities and growing' },
   ],
   igPathwayLine: 'the Sundays live on Instagram →',
   footerTagline: 'Reading together since 2024 · Pune, India',
@@ -68,7 +68,7 @@ export const faqs = [
   { q: 'What if it rains?', a: "Then we don't. The WhatsApp tells you by Saturday night." },
   { q: 'How do I get on the WhatsApp?', a: 'DM us on Instagram, @pune_bookies. One of us will add you.' },
   { q: 'Will I end up in the photos?', a: "Only if you want to. The group photo at 9:50 is opt-in by walking into it; step aside and nobody minds. If a photo of you is up somewhere and you'd rather it weren't, DM us and it comes down." },
-  { q: 'Are there other cities?', a: 'Bombay, Bengaluru, Jaipur.' },
+  { q: 'Are there other cities?', a: 'Bombay, Bengaluru.' },
 ];
 
 export const cities = [
@@ -79,10 +79,6 @@ export const cities = [
   {
     name: 'Bengaluru Bookies', place: 'Bengaluru', soon: false,
     mark: `<g filter="url(#chapter-rough)"><ellipse cx="40" cy="42" rx="26" ry="22" fill="#9bb07e" opacity="0.45"/><ellipse cx="35" cy="35" rx="18" ry="20" fill="#738c5a" opacity="0.5"/><path d="M 22 50 Q 40 36 58 50" stroke="#1f1611" stroke-width="1.2" fill="none" opacity="0.5"/><circle cx="42" cy="30" r="3" fill="#c8553d" opacity="0.55"/></g>`,
-  },
-  {
-    name: 'Jaipur Bookies', place: 'Jaipur', soon: false,
-    mark: `<g filter="url(#chapter-rough)"><ellipse cx="40" cy="40" rx="28" ry="20" fill="#d97863" opacity="0.45"/><ellipse cx="40" cy="36" rx="22" ry="16" fill="#c8553d" opacity="0.45"/><path d="M 25 48 Q 40 34 55 48" stroke="#1f1611" stroke-width="1.2" fill="none" opacity="0.55"/><circle cx="38" cy="32" r="3" fill="#b88840" opacity="0.6"/></g>`,
   },
   {
     name: 'Your city?', place: 'Maybe', soon: true,
@@ -98,7 +94,7 @@ export const press = [
 // /brands evidence — markup fallback values; brands.js BRANDS_STATS
 // overrides at runtime and runs the count-up.
 export const brandStats = [
-  { key: 'READERS_PER_SUNDAY', value: '250', unit: '', label: 'readers on a typical Sunday' },
+  { key: 'READERS_PER_SUNDAY', value: '200', unit: '', label: 'readers on a typical Sunday' },
   { key: 'IG_FOLLOWERS', value: '43,900', unit: '', label: 'Instagram followers' },
   { key: 'SUNDAYS_HELD', value: '120', unit: '+', label: 'Sundays since early 2024' },
   { key: 'ENGAGEMENT_RATE', value: '4.8', unit: '%', label: 'average engagement rate' },
@@ -109,12 +105,12 @@ export const brandStats = [
 export const brandCases = [
   {
     title: 'Penguin, on the grass',
-    meta: '[PLACEHOLDER] date · ~250 readers',
+    meta: '[PLACEHOLDER] date · ~200 readers',
     body: "[PLACEHOLDER] Penguin brought a small table of new releases and left the rest of the Sunday alone. Readers went home with next month's book already decided. Outcome line to fill: what Penguin counted, and what it counted for.",
   },
   {
     title: 'Audible, in one ear',
-    meta: '[PLACEHOLDER] date · ~250 readers',
+    meta: '[PLACEHOLDER] date · ~200 readers',
     body: "[PLACEHOLDER] An audiobook corner for people who think they don't have time to read. Outcome line to fill: trial signups in the week after, discovered-on-Sunday titles.",
   },
   {
@@ -128,7 +124,7 @@ export const people = [
   { name: 'Tanvi', role: 'founder', bio: 'Started Pune Bookies in early 2024. Reads more than she sleeps.' },
   { name: 'Shrey', role: 'partnerships, operations & community', bio: "The person you'll most likely be writing to. Keeps the Sundays running and the conversations honest." },
   { name: 'Samruddhi', role: 'content', bio: 'Photos, videos, reels — the reason 43,900 people watch our Sundays from somewhere else.' },
-  { name: '+ everyone who shows up', role: 'the actual community', bio: 'Two hundred and fifty people deciding to read together every Sunday is what Pune Bookies actually is.' },
+  { name: '+ everyone who shows up', role: 'the actual community', bio: 'Two hundred people deciding to read together every Sunday is what Pune Bookies actually is.' },
 ];
 
 export const openList = [
@@ -136,5 +132,5 @@ export const openList = [
   'Venue partnerships — farms, large cafés, yoga studios, bookshops, anywhere a couple of hundred quiet readers can spread out for a few hours on a Sunday morning.',
   'Refreshment partners — coffee, tea, books, bookmarks, tote bags, small things that make a Sunday a bit warmer.',
   'Themed Sundays — a reading curated around a new book, a topic, a launch, a writer in town.',
-  'Cross-chapter campaigns — if something works in Pune, we can usually extend it through the wider Bookies network, Bombay and Bengaluru and Jaipur included.',
+  'Cross-chapter campaigns — if something works in Pune, we can usually extend it through the wider Bookies network, Bombay and Bengaluru included.',
 ];

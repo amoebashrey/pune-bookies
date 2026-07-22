@@ -71,7 +71,7 @@ const docs = [
     ['What if it rains?', "Then we don't. The WhatsApp tells you by Saturday night."],
     ['How do I get on the WhatsApp?', 'DM us on Instagram, @pune_bookies. One of us will add you.'],
     ["Will I end up in the photos?", "Only if you want to. The group photo at 9:50 is opt-in by walking into it; step aside and nobody minds. If a photo of you is up somewhere and you'd rather it weren't, DM us and it comes down."],
-    ['Are there other cities?', 'Bombay, Bengaluru, Jaipur.'],
+    ['Are there other cities?', 'Bombay, Bengaluru.'],
   ].map(([question, answer], i) => ({
     _id: `faq-${i + 1}`, _type: 'faqItem', question, answer, order: (i + 1) * 10, visible: true,
   })),
@@ -122,7 +122,6 @@ const docs = [
   { _id: 'press-ctp', _type: 'pressMention', outlet: 'Campus Times Pune', visible: true },
   { _id: 'city-bombay', _type: 'city', name: 'Bombay Bookies', status: 'active', order: 10 },
   { _id: 'city-bengaluru', _type: 'city', name: 'Bengaluru Bookies', status: 'active', order: 20 },
-  { _id: 'city-jaipur', _type: 'city', name: 'Jaipur Bookies', status: 'active', order: 30 },
 ];
 
 let created = 0, skipped = 0;

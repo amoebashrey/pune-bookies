@@ -17,7 +17,7 @@ const sunday = defineType({
     defineField({
       name: 'city', title: 'City', type: 'string',
       description: 'Which chapter held this Sunday.',
-      options: { list: ['Pune', 'Bombay', 'Bangalore', 'Jaipur'], layout: 'radio' },
+      options: { list: ['Pune', 'Bombay', 'Bangalore'], layout: 'radio' },
       initialValue: 'Pune',
       validation: (Rule) => Rule.required(),
     }),
